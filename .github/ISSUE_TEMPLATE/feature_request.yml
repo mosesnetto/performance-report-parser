@@ -1,0 +1,27 @@
+name: ✨ Feature request
+description: Propose an improvement to MERIDIAN Engine Intelligence.
+title: "[Feature] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: What should the engine be able to do?
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+      description: What is missing today and why does it matter?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe the behaviour you would like (parser, dashboard, voice, analytics, triggers...).
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Expected impact
+      description: Which reports/users does this affect?

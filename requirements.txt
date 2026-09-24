@@ -1,0 +1,16 @@
+# --- Runtime dependencies -------------------------------
+PyMuPDF>=1.24
+opencv-python-headless>=4.8
+pytesseract>=0.3.10
+Pillow>=10.0
+pandas>=2.0
+openpyxl>=3.1
+PyYAML>=6.0
+numpy>=1.24
+Flask>=3.0
+requests>=2.31
+fpdf2>=2.7
+
+# --- Dev / test ------------------------------------------
+pytest>=8.0
+ruff>=0.6

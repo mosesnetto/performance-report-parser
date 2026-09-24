@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MERIDIAN — Triggers</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: Arial, Helvetica, sans-serif; background: #f4f7fb; color: #172033; margin: 0; padding: 28px; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+h1 { font-size: 24px; margin: 0; }
+.nav a { text-decoration: none; padding: 9px 13px; border: 1px solid #dbe3ec; border-radius: 8px; background: #fff; color: #1f2937; font-weight: 700; font-size: 13px; margin-left: 8px; }
+.nav a.primary { background: #2563eb; color: #fff; border-color: #2563eb; }
+.card { background: #fff; border: 1px solid #dbe3ec; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+h2 { font-size: 18px; margin: 0 0 14px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+th { background: #f8fafc; font-weight: 700; color: #64748b; }
+.badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+.badge.ok { background: #ecfdf5; color: #047857; }
+.badge.alert { background: #fef2f2; color: #b91c1c; }
+.form-row { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; align-items: center; margin-bottom: 10px; }
+.form-row label { font-weight: 600; font-size: 13px; color: #475569; }
+input, select, textarea { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; }
+.btn { display: inline-block; background: #2563eb; color: #fff; padding: 10px 18px; border-radius: 8px; border: 0; font-weight: 700; cursor: pointer; font-size: 13px; }
+.result-box { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px; margin-top: 14px; font-size: 13px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Triggers</h1>
+  <div class="nav">
+    <a href="/">Reports</a>
+    <a href="/validator">Validator</a>
+    <a href="/analytics">Analytics</a>
+    <a href="/triggers" class="primary">Triggers</a>
+  </div>
+</header>
+<main>
+  <div class="card">
+    <h2>Active Triggers</h2>
+    <a href="/triggers/evaluate" class="btn small" onclick="event.preventDefault(); fetch('/triggers/evaluate').then(r=>r.json()).then(d=>{ document.getElementById('evalResult').textContent=JSON.stringify(d,null,2); }).catch(e=>{document.getElementById('evalResult').textContent='Error: '+e;});">Run Evaluation</a>
+    <div id="evalResult" class="result-box"></div>
+  </div>
+  <div class="card">
+    <h2>Triggers List</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Name</th><th>Field</th><th>Operator</th><th>Threshold</th><th>Active</th></tr></thead>
+      <tbody>
+        {% for t in triggers %}
+        <tr>
+          <td>{{ t.trigger_id }}</td>
+          <td><strong>{{ t.name }}</strong></td>
+          <td>{{ t.field }}</td>
+          <td>{{ t.operator }}</td>
+          <td>{{ t.threshold }}</td>
+          <td><span class="badge {{ 'ok' if t.active else '' }}">{{ 'ON' if t.active else 'OFF' }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Results (last run)</h2>
+    {% if results %}
+    <table>
+      <thead><tr><th>Trigger</th><th>Fired</th><th>Summary</th></tr></thead>
+      <tbody>
+        {% for r in results %}
+        <tr>
+          <td>{{ r.trigger_id }}</td>
+          <td><span class="badge {{ 'alert' if r.fired else 'ok' }}">{{ 'YES' if r.fired else 'NO' }}</span></td>
+          <td>{{ r.value_summary }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No evaluation results yet.</p>
+    {% endif %}
+  </div>
+  <div class="card">
+    <h2>Add Trigger</h2>
+    <form id="addTriggerForm" onsubmit="event.preventDefault(); addTrigger();">
+      <div class="form-row"><label>Name</label><input name="name" required></div>
+      <div class="form-row"><label>Field</label><input name="field"></div>
+      <div class="form-row"><label>Tag</label><input name="tag"></div>
+      <div class="form-row"><label>Operator</label><select name="operator"><option value=">">&gt;</option><option value="<">&lt;</option><option value=">=">&gt;=</option><option value="<=">&lt;=</option></select></div>
+      <div class="form-row"><label>Threshold</label><input name="threshold" type="number" step="0.1" value="0"></div>
+      <div class="form-row"><label>Scope</label><input name="scope" value="new_reports"></div>
+      <button class="btn" type="submit">Add Trigger</button>
+    </form>
+  </div>
+</main>
+<script>
+function addTrigger() {
+  const fd = new FormData(document.getElementById('addTriggerForm'));
+  const payload = {
+    name: fd.get('name'),
+    description: '',
+    field: fd.get('field'),
+    tag: fd.get('tag'),
+    operator: fd.get('operator'),
+    threshold: parseFloat(fd.get('threshold')) || 0,
+    grouping: '',
+    scope: fd.get('scope'),
+    active: true,
+  };
+  fetch('/triggers/add', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)})
+    .then(r=>r.json()).then(d=>{ alert('Trigger added: '+d.entry.name); location.reload(); }).catch(e=>alert('Error adding trigger'));
+}
+</script>
+</body>
+</html>

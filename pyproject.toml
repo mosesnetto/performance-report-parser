@@ -1,0 +1,48 @@
+[project]
+name = "meridian-engine-intelligence"
+version = "2.1.0"
+description = "MERIDIAN Engine Intelligence: scans+parses scanned marine-engine performance report PDFs into a validated 125-field extractor with audit, analytics, AI insights and offline voice briefings."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Moses Netto", email = "mosesnetto@gmail.com" }]
+keywords = ["marine-engine", "ocr", "pdf", "performance-report", "validation", "flask", "pytesseract", "analytics"]
+dependencies = [
+    "PyMuPDF>=1.24",
+    "opencv-python-headless>=4.8",
+    "pytesseract>=0.3.10",
+    "Pillow>=10.0",
+    "pandas>=2.0",
+    "openpyxl>=3.1",
+    "PyYAML>=6.0",
+    "numpy>=1.24",
+    "Flask>=3.0",
+    "requests>=2.31",
+    "fpdf2>=2.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+# Focused bug-catching ruleset: real bugs (F), imports (I),
+# E4xx import-errors, E9xx runtime-errors and bare-except (E722).
+# Statement-style rules (E701/E702/E731/E741) are intentionally not
+# enforced on this legacy-derived engine to keep the verified OCR
+# pipeline untouched.
+select = ["E4", "E9", "F", "I", "E722"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E501"]

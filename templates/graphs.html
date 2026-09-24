@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MERIDIAN — Trend Analysis</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#172033}
+header{background:#fff;border-bottom:1px solid #dbe3ec;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+header h1{margin:0;font-size:22px}
+header p{margin:4px 0 0;color:#64748b;font-size:13px}
+.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid #cbd5e1;background:#fff;color:#1f2937;border-radius:8px;padding:8px 12px;cursor:pointer;font-weight:700;text-decoration:none;font-size:13px}
+.btn.primary{background:#2563eb;color:#fff;border-color:#2563eb}
+.btn:hover{opacity:.9}
+
+main{display:grid;grid-template-columns:400px minmax(0,1fr);gap:16px;padding:18px;min-height:calc(100vh - 80px)}
+.sidebar,.chart-panel{background:#fff;border:1px solid #dbe3ec;border-radius:14px}
+.sidebar{padding:16px;display:flex;flex-direction:column;min-height:650px;overflow:hidden}
+.sidebar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sidebar-head h2{margin:0;font-size:16px}
+.selected-count{font-size:12px;color:#64748b}
+
+.control{margin-bottom:12px}
+.control label{display:block;margin-bottom:5px;font-size:11px;font-weight:700;text-transform:uppercase;color:#64748b}
+.control select,.search{width:100%;height:38px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px;background:#fff}
+
+.search-wrap{margin-bottom:10px}
+.search{font-size:13px}
+
+.bulk-actions{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap}
+.small-btn{border:1px solid #cbd5e1;background:#fff;border-radius:7px;padding:6px 9px;font-size:12px;font-weight:700;cursor:pointer}
+.small-btn:hover{background:#f8fafc}
+
+.parameter-list{flex:1;overflow:auto;border:1px solid #edf0f4;border-radius:9px;padding:7px}
+.parameter-item{display:flex;align-items:flex-start;gap:8px;padding:7px;border-radius:7px;cursor:pointer}
+.parameter-item:hover{background:#f8fafc}
+.parameter-item input{margin-top:2px}
+.parameter-main{min-width:0}
+.parameter-name{font-size:13px;font-weight:700;line-height:1.3}
+.parameter-unit{font-size:11px;color:#64748b;margin-top:2px}
+
+.selected-panel{margin-top:12px;padding-top:12px;border-top:1px solid #edf0f4}
+.selected-title{font-size:11px;font-weight:700;text-transform:uppercase;color:#64748b;margin-bottom:7px}
+.selected-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow:auto}
+
+.selected-card{border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;padding:8px 9px}
+.selected-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
+.selected-name{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.selected-remove{border:0;background:transparent;font-size:17px;color:#94a3b8;cursor:pointer;line-height:1}
+.selected-remove:hover{color:#dc2626}
+.col-list{display:flex;flex-wrap:wrap;gap:6px}
+.col-chip{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #cbd5e1;border-radius:99px;padding:3px 9px;font-size:11px;font-weight:600;cursor:pointer;user-select:none}
+.col-chip:hover{border-color:#2563eb}
+.col-chip.checked{background:#2563eb;color:#fff;border-color:#2563eb}
+.col-chip input{display:none}
+
+.chart-panel{padding:16px;display:flex;flex-direction:column;min-width:0}
+.chart-toolbar{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr)) auto;gap:9px;margin-bottom:12px;align-items:end}
+.chart-toolbar label{display:block;margin-bottom:4px;font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase}
+.chart-toolbar select,.chart-toolbar input{width:100%;height:36px;border:1px solid #cbd5e1;border-radius:7px;padding:0 8px;background:#fff}
+.range-wrap{display:flex;gap:4px;align-items:center}
+.range-wrap label{white-space:nowrap}
+.chart-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px;color:#64748b;font-size:12px;flex-wrap:wrap}
+.chart-wrap{position:relative;min-height:560px;flex:1;border:1px solid #edf0f4;border-radius:10px;padding:12px}
+.empty-chart{position:absolute;inset:0;display:grid;place-items:center;color:#94a3b8;text-align:center;padding:30px}
+.loading{position:fixed;inset:0;background:rgba(15,23,42,.35);display:grid;place-items:center;z-index:200}
+.loading-box{background:#fff;border-radius:12px;padding:20px 25px;box-shadow:0 10px 30px rgba(0,0,0,.2);font-weight:700}
+.hidden{display:none!important}
+.section-hint{font-size:11px;color:#94a3b8;margin:2px 0 8px}
+
+@media(max-width:1100px){
+main{grid-template-columns:1fr}
+.sidebar{min-height:auto}
+.chart-toolbar{grid-template-columns:repeat(3,minmax(130px,1fr))}
+}
+@media(max-width:720px){
+header{flex-direction:column;align-items:flex-start}
+.chart-toolbar{grid-template-columns:1fr 1fr}
+.chart-wrap{min-height:480px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div>
+<h1>Trend Analysis</h1>
+<p>Compare parameters across reports by field_id + semantic column.</p>
+</div>
+
+<div class="top-actions">
+<a href="/" class="btn">← Reports</a>
+<a href="/" class="btn">Dashboard</a>
+<button id="refreshBtn" class="btn" type="button">↻ Refresh</button>
+<button id="exportBtn" class="btn primary" type="button">⬇ Export CSV</button>
+</div>
+</header>
+
+<main>
+
+<aside class="sidebar">
+
+<div class="sidebar-head">
+<h2>Parameters</h2>
+<div class="selected-count"><span id="selectedCount">0</span> Selected</div>
+</div>
+
+<div class="control">
+<label for="reportMode">Reports</label>
+<select id="reportMode"><option value="all">All uploaded reports</option></select>
+</div>
+
+<div class="search-wrap">
+<input id="parameterSearch" class="search" type="text" placeholder="Search parameters..." autocomplete="off">
+</div>
+
+<div class="bulk-actions">
+<button id="selectVisible" class="small-btn" type="button">Select visible</button>
+<button id="clearVisible" class="small-btn" type="button">Clear visible</button>
+<button id="clearAll" class="small-btn" type="button">Clear all</button>
+</div>
+
+<div id="parameterList" class="parameter-list"></div>
+
+<div class="selected-panel">
+<div class="selected-title">Selected parameters &amp; columns</div>
+<div class="section-hint">Pick one or more semantic columns per field. Identity = field_id + column.</div>
+<div id="selectedList" class="selected-list"></div>
+</div>
+
+</aside>
+
+<section class="chart-panel">
+
+<div class="chart-toolbar">
+
+<div>
+<label for="xMode">X Axis</label>
+<select id="xMode">
+<option value="monthYear">Month + Year</option>
+<option value="report">PDF report</option>
+<option value="date">Full recording date</option>
+</select>
+</div>
+
+<div>
+<label for="scaleMode">Y Axis</label>
+<select id="scaleMode">
+<option value="independent">Independent Y axes</option>
+<option value="single">Single Y axis</option>
+</select>
+</div>
+
+<div>
+<label for="chartType">Chart</label>
+<select id="chartType">
+<option value="line">Line</option>
+<option value="bar">Bar</option>
+</select>
+</div>
+
+<div>
+<label for="sortMode">Order</label>
+<select id="sortMode">
+<option value="chronological">Chronological</option>
+<option value="alphabetical">PDF name</option>
+</select>
+</div>
+
+<div class="range-wrap">
+<label>From</label>
+<input id="rangeFrom" type="month">
+<label>To</label>
+<input id="rangeTo" type="month">
+</div>
+
+</div>
+
+<div class="chart-meta">
+<span id="chartInfo">Select parameters from the left.</span>
+<span id="reportInfo"></span>
+</div>
+
+<div class="chart-wrap">
+<canvas id="trendChart"></canvas>
+<div id="emptyChart" class="empty-chart">
+<div>
+<strong>No parameters selected</strong><br><br>
+Select one or more parameters from the left, then pick the semantic columns to plot.
+</div>
+</div>
+</div>
+
+</section>
+
+</main>
+
+<div id="loading" class="loading hidden"><div class="loading-box">Loading report data...</div></div>
+
+<script>
+"use strict";
+
+let reports=[];
+let reportData={};
+
+// selectedFields: Map<fieldId, {field, columns:Set} > where columns are semantic (or "__VALUE__" for primary)
+let selectedMap=new Map();
+let chart=null;
+
+const PRIMARY="__VALUE__";
+const COLORS=["#2563eb","#dc2626","#16a34a","#7c3aed","#ea580c","#0891b2","#db2777","#65a30d","#9333ea","#0f766e","#475569","#ca8a04"];
+
+function $(id){return document.getElementById(id);}
+
+function getCells(row,column){
+  if(!row||!row.cells) return [];
+  const v=row.cells[column];
+  return v ? (Array.isArray(v)?v:[v]) : [];
+}
+
+function getPrimaryValue(row){
+  const direct=getCells(row,"VALUE");
+  if(direct.length) return direct[0];
+  const all=[];
+  for(const [col,raw] of Object.entries(row.cells||{})){
+    if(String(col).toUpperCase()==="VALUE") continue;
+    const cells=Array.isArray(raw)?raw:[raw];
+    for(const c of cells) all.push(c);
+  }
+  return all.length===1?all[0]:null;
+}
+
+function numericValue(cell){
+  if(!cell) return null;
+  let raw=cell.value;
+  if(raw===null||raw===undefined||raw==="") raw=cell.raw_text;
+  if(raw===null||raw===undefined||raw==="") return null;
+  if(typeof raw==="number") return Number.isFinite(raw)?raw:null;
+  const text=String(raw).trim();
+  const direct=Number(text.replace(",","."));
+  if(Number.isFinite(direct)) return direct;
+  const m=text.match(/[-+]?\d+(?:[.,]\d+)?/);
+  if(!m) return null;
+  const v=Number(m[0].replace(",","."));
+  return Number.isFinite(v)?v:null;
+}
+
+function getReportDate(report){
+  const rec=reportData[report.job_id];
+  if(!rec){return {date:null,label:report.filename,monthYear:report.filename,monthKey:null};}
+  const rows=rec.data.rows||[];
+  const dateRow=rows.find(r=>String(r.field_name||"").trim().toLowerCase()==="date and time of recording");
+  let raw=null;
+  if(dateRow){const cell=getPrimaryValue(dateRow); if(cell) raw=cell.value??cell.raw_text??null;}
+  if(raw!==null){
+    const text=String(raw).trim();
+    const m=text.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+    if(m){
+      if(text.indexOf(":")!==-1){ // likely a time like HH:MM:SS or MM/DD/YYYY HH:MM -> treat as date-time if first token date
+      }
+      let month=Number(m[1]),day=Number(m[2]),year=Number(m[3]);
+      if(year<100) year+=2000;
+      const date=new Date(year,month-1,day);
+      if(!Number.isNaN(date.getTime())){
+        return {date,label:date.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}),monthYear:date.toLocaleDateString("en-US",{month:"short",year:"numeric"}),monthKey:year*100+month};
+      }
+    }
+  }
+  const fm=String(report.filename||"").match(/(\d{4})__(\d{1,2})/);
+  if(fm){
+    const year=Number(fm[1]),month=Number(fm[2]);
+    const date=new Date(year,month-1,1);
+    return {date,label:date.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}),monthYear:date.toLocaleDateString("en-US",{month:"short",year:"numeric"}),monthKey:year*100+month};
+  }
+  return {date:null,label:report.filename,monthYear:report.filename,monthKey:null};
+}
+
+// Semantic columns for a field: use explicit schema when present, else cells, else primary.
+function getFieldColumns(row){
+  if(!row) return [PRIMARY];
+  let cols=(row.schema&&row.schema.length)?row.schema.slice():(Object.keys(row.cells||{}).filter(c=>String(c).toUpperCase()!=="VALUE"));
+  if(cols.length===0) cols=[PRIMARY];
+  return cols;
+}
+
+function columnDisplay(col){
+  return col===PRIMARY?"Primary":String(col);
+}
+
+async function loadReports(){
+  const resp=await fetch("/api/reports");
+  const result=await resp.json();
+  if(!resp.ok||!result.ok) throw new Error(result.error||"Unable to load reports.");
+  reports=result.reports||[];
+  reportData={};
+  for(const report of reports){
+    const r=await fetch("/api/report/"+encodeURIComponent(report.job_id));
+    const j=await r.json();
+    if(r.ok&&j.ok){
+      reportData[report.job_id]={meta:report,summary:j.summary||{},data:j.data,audit_counts:j.audit_counts||{}};
+    }
+  }
+  updateReportSelector();
+  initDateRange();
+}
+
+function updateReportSelector(){
+  const select=$("reportMode");
+  select.innerHTML="";
+  const all=document.createElement("option");all.value="all";all.textContent="All uploaded reports";select.appendChild(all);
+  for(const report of reports){
+    const o=document.createElement("option");o.value=report.job_id;o.textContent=report.filename;select.appendChild(o);
+  }
+  $("reportInfo").textContent=reports.length+(reports.length===1?" report":" reports");
+}
+
+function initDateRange(){
+  const keys=reports.map(r=>getReportDate(r).monthKey).filter(k=>k!==null);
+  if(!keys.length){$("rangeFrom").value="";$("rangeTo").value="";return;}
+  const min=Math.min(...keys),max=Math.max(...keys);
+  $("rangeFrom").value=String(min).slice(0,4)+"-"+String(min).slice(4,6).padStart(2,"0");
+  $("rangeTo").value=String(max).slice(0,4)+"-"+String(max).slice(4,6).padStart(2,"0");
+}
+
+function monthKeyToValue(k){return String(k).slice(0,4)+"-"+String(k).slice(4,6).padStart(2,"0");}
+
+function getActiveReports(){
+  const mode=$("reportMode").value;
+  let list=mode==="all"?reports.slice():reports.filter(r=>r.job_id===mode);
+  const from=$("rangeFrom").value?Number($("rangeFrom").value.replace("-","")):null;
+  const to=$("rangeTo").value?Number($("rangeTo").value.replace("-","")):null;
+  if(from!==null||to!==null){
+    list=list.filter(r=>{
+      const k=getReportDate(r).monthKey;
+      if(k===null) return true;
+      if(from!==null&&k<from) return false;
+      if(to!==null&&k>to) return false;
+      return true;
+    });
+  }
+  return list;
+}
+
+function getFieldDefinitions(){
+  const map=new Map();
+  for(const report of reports){
+    const rec=reportData[report.job_id];
+    if(!rec) continue;
+    for(const row of rec.data.rows||[]){
+      if(row.field_id&&!map.has(row.field_id)){
+        map.set(row.field_id,{id:row.field_id,name:row.field_name||row.field_id,unit:row.unit||"",region:row.region||"",schema:getFieldColumns(row)});
+      }
+    }
+  }
+  return Array.from(map.values()).sort((a,b)=>a.name.localeCompare(b.name));
+}
+
+function renderParameters(){
+  const list=$("parameterList");
+  const q=$("parameterSearch").value.trim().toLowerCase();
+  list.innerHTML="";
+  const fields=getFieldDefinitions();
+  const visible=fields.filter(f=>f.name.toLowerCase().includes(q));
+  if(!visible.length){
+    const e=document.createElement("div");e.style.padding="18px 10px";e.style.color="#94a3b8";e.textContent="No parameters found.";list.appendChild(e);return;
+  }
+  for(const field of visible){
+    const label=document.createElement("label");label.className="parameter-item";
+    const cb=document.createElement("input");cb.type="checkbox";cb.checked=selectedMap.has(field.id);
+    cb.addEventListener("change",()=>{
+      if(cb.checked){
+        // default: select first useful column
+        const defCol=field.schema.includes("AVG")?"AVG":(field.schema.length?field.schema[0]:PRIMARY);
+        selectedMap.set(field.id,{field,columns:new Set([defCol])});
+      }else{selectedMap.delete(field.id);}
+      renderParameters();renderSelected();updateChart();
+    });
+    const main=document.createElement("div");main.className="parameter-main";
+    const name=document.createElement("div");name.className="parameter-name";name.textContent=field.name;
+    const unit=document.createElement("div");unit.className="parameter-unit";unit.textContent=(field.unit?field.unit+" · ":"")+field.region;
+    main.appendChild(name);main.appendChild(unit);
+    label.appendChild(cb);label.appendChild(main);list.appendChild(label);
+  }
+}
+
+function renderSelected(){
+  const list=$("selectedList");
+  list.innerHTML="";
+  if(selectedMap.size===0){list.innerHTML='<div class="section-hint">No fields selected.</div>';}
+  for(const [fieldId,sel] of selectedMap){
+    const card=document.createElement("div");card.className="selected-card";
+    const head=document.createElement("div");head.className="selected-head";
+    const name=document.createElement("div");name.className="selected-name";name.textContent=sel.field.name;name.title=sel.field.name;
+    const remove=document.createElement("button");remove.className="selected-remove";remove.type="button";remove.textContent="×";
+    remove.addEventListener("click",()=>{selectedMap.delete(fieldId);renderParameters();renderSelected();updateChart();});
+    head.appendChild(name);head.appendChild(remove);card.appendChild(head);
+    const cols=document.createElement("div");cols.className="col-list";
+    for(const col of sel.field.schema){
+      const chip=document.createElement("label");chip.className="col-chip"+(sel.columns.has(col)?" checked":"");
+      const input=document.createElement("input");input.type="checkbox";input.checked=sel.columns.has(col);
+      input.addEventListener("change",()=>{
+        if(input.checked){sel.columns.add(col);}else{sel.columns.delete(col);}
+        renderSelected();updateChart();
+      });
+      chip.appendChild(input);chip.appendChild(document.createTextNode(columnDisplay(col)));
+      cols.appendChild(chip);
+    }
+    card.appendChild(cols);
+    list.appendChild(card);
+  }
+  $("selectedCount").textContent=selectedMap.size;
+}
+
+function getFieldValue(report,fieldId,column){
+  const rec=reportData[report.job_id];
+  if(!rec) return null;
+  const row=(rec.data.rows||[]).find(x=>x.field_id===fieldId);
+  if(!row) return null;
+  if(column===PRIMARY){return numericValue(getPrimaryValue(row));}
+  const cells=getCells(row,column);
+  return cells.length?numericValue(cells[0]):null;
+}
+
+function updateChart(){
+  const activeReports=getActiveReports();
+  if(selectedMap.size===0||activeReports.length===0){
+    destroyChart();
+    $("emptyChart").classList.remove("hidden");
+    $("chartInfo").textContent=selectedMap.size===0?"Select parameters from the left.":"No reports in the selected range.";
+    return;
+  }
+  $("emptyChart").classList.add("hidden");
+  const xMode=$("xMode").value,chartType=$("chartType").value,independent=$("scaleMode").value==="independent";
+  let ordered=activeReports.slice();
+  if($("sortMode").value==="chronological"){
+    ordered.sort((a,b)=>{const da=getReportDate(a),db=getReportDate(b);if(da.date&&db.date)return da.date.getTime()-db.date.getTime();if(da.date)return -1;if(db.date)return 1;return String(a.filename).localeCompare(String(b.filename));});
+  }else{
+    ordered.sort((a,b)=>String(a.filename).localeCompare(String(b.filename)));
+  }
+  const labels=ordered.map(r=>{const i=getReportDate(r);if(xMode==="report")return String(r.filename).replace(/\.pdf$/i,"");if(xMode==="date")return i.label;return i.monthYear;});
+  const datasets=[];
+  let idx=0;
+  for(const [fieldId,sel] of selectedMap){
+    for(const col of sel.columns){
+      let values=ordered.map(r=>getFieldValue(r,fieldId,col));
+      const hasData=values.some(v=>v!==null);
+      if(!hasData) continue;
+      const color=COLORS[idx%COLORS.length];
+      const label=sel.field.name+(col===PRIMARY?"":" — "+columnDisplay(col));
+      datasets.push({label,data:values,borderColor:color,backgroundColor:color,borderWidth:2,pointRadius:3,pointHoverRadius:7,tension:.2,spanGaps:false,yAxisID:independent?"y"+idx:"y"});
+      idx++;
+    }
+  }
+  if(!datasets.length){
+    destroyChart();
+    $("emptyChart").classList.remove("hidden");
+    $("chartInfo").textContent="Selected parameters have no numeric data in this range.";
+    return;
+  }
+  const scales={x:{title:{display:true,text:xMode==="monthYear"?"Month / Year":xMode==="date"?"Recording date":"PDF report"},ticks:{autoSkip:true,maxRotation:45,minRotation:0}},y:{beginAtZero:false,title:{display:true,text:"Measurement value"}}};
+  if(independent){
+    delete scales.y;
+    datasets.forEach((ds,i)=>{scales["y"+i]={position:i%2===0?"left":"right",beginAtZero:false,grid:{drawOnChartArea:i===0},title:{display:true,text:ds.label}};});
+  }
+  destroyChart();
+  chart=new Chart($("trendChart"),{type:chartType,data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:true,position:"top",labels:{usePointStyle:true}},tooltip:{callbacks:{title(items){if(!items||!items.length)return"";const r=ordered[items[0].dataIndex];const i=getReportDate(r);return[i.monthYear,r.filename];},label(c){const v=c.parsed.y;return v===null||v===undefined?c.dataset.label+": no data":c.dataset.label+": "+v;}}}},scales}});
+  let total=0;for(const ds of datasets)for(const v of ds.data)if(v!==null)total++;
+  $("chartInfo").textContent=selectedMap.size+(selectedMap.size===1?" parameter":" parameters")+" × "+ordered.length+(ordered.length===1?" report":" reports")+" · "+total+" plotted values · identity = field_id + semantic column";
+}
+
+function destroyChart(){if(chart){chart.destroy();chart=null;}}
+
+function csvEscape(v){const t=String(v??"");return /[",\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t;}
+
+function exportCSV(){
+  if(selectedMap.size===0) return;
+  const ordered=getActiveReports().slice().sort((a,b)=>{const da=getReportDate(a),db=getReportDate(b);if(da.date&&db.date)return da.date.getTime()-db.date.getTime();if(da.date)return -1;if(db.date)return 1;return String(a.filename).localeCompare(String(b.filename));});
+  const headers=["Month / Year","Recording Date","PDF Report","Field ID","Column"];
+  const activeSeries=[];
+  for(const [fieldId,sel] of selectedMap){for(const col of sel.columns){activeSeries.push({fieldId,column:col,field:sel.field});}}
+  const lines=[headers.map(csvEscape).join(",")];
+  for(const report of ordered){
+    const info=getReportDate(report);
+    const base=[info.monthYear,info.label,report.filename];
+    const row=[...base];
+    for(const s of activeSeries){const v=getFieldValue(report,s.fieldId,s.column);row.push(s.fieldId);row.push(columnDisplay(s.column));row.push(v===null?"":v);}
+    lines.push(row.map(csvEscape).join(","));
+  }
+  const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob);const link=document.createElement("a");link.href=url;link.download="trend_analysis.csv";document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);
+}
+
+$("parameterSearch").addEventListener("input",renderParameters);
+$("selectVisible").addEventListener("click",()=>{const q=$("parameterSearch").value.trim().toLowerCase();for(const f of getFieldDefinitions()){if(f.name.toLowerCase().includes(q)){const def=f.schema.includes("AVG")?"AVG":(f.schema.length?f.schema[0]:PRIMARY);if(!selectedMap.has(f.id))selectedMap.set(f.id,{field:f,columns:new Set([def])});}}renderParameters();renderSelected();updateChart();});
+$("clearVisible").addEventListener("click",()=>{const q=$("parameterSearch").value.trim().toLowerCase();for(const f of getFieldDefinitions()){if(f.name.toLowerCase().includes(q))selectedMap.delete(f.id);}renderParameters();renderSelected();updateChart();});
+$("clearAll").addEventListener("click",()=>{selectedMap.clear();renderParameters();renderSelected();updateChart();});
+["reportMode","xMode","scaleMode","chartType","sortMode","rangeFrom","rangeTo"].forEach(id=>$(id).addEventListener("change",updateChart));
+$("refreshBtn").addEventListener("click",async()=>{$("loading").classList.remove("hidden");try{await loadReports();renderParameters();renderSelected();updateChart();}catch(e){alert(e.message);}finally{$("loading").classList.add("hidden");}});
+$("exportBtn").addEventListener("click",exportCSV);
+
+(async function(){
+  $("loading").classList.remove("hidden");
+  try{
+    await loadReports();
+    const defaults=["ENGINE power effective","ENGINE power estimated","ENGINE speed","Specific FOC"];
+    for(const name of defaults){
+      const f=getFieldDefinitions().find(x=>x.name.toLowerCase()===name.toLowerCase());
+      if(f){const def=f.schema.includes("AVG")?"AVG":(f.schema[0]||PRIMARY);selectedMap.set(f.id,{field:f,columns:new Set([def])});}
+    }
+    $("xMode").value="monthYear";$("sortMode").value="chronological";$("scaleMode").value="independent";
+    renderParameters();renderSelected();updateChart();
+  }catch(e){console.error(e);$("chartInfo").textContent=e.message;}
+  finally{$("loading").classList.add("hidden");}
+})();
+</script>
+
+</body>
+</html>

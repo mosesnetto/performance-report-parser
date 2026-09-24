@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MERIDIAN — Validator / Registry</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: Arial, Helvetica, sans-serif; background: #f4f7fb; color: #172033; margin: 0; padding: 28px; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+h1 { font-size: 24px; margin: 0; }
+.nav a { text-decoration: none; padding: 9px 13px; border: 1px solid #dbe3ec; border-radius: 8px; background: #fff; color: #1f2937; font-weight: 700; font-size: 13px; margin-left: 8px; }
+.nav a.primary { background: #2563eb; color: #fff; border-color: #2563eb; }
+.card { background: #fff; border: 1px solid #dbe3ec; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+h2 { font-size: 18px; margin: 0 0 14px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+th { background: #f8fafc; font-weight: 700; color: #64748b; }
+.badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+.badge.ok { background: #ecfdf5; color: #047857; }
+.badge.busy { background: #fff7ed; color: #9a3412; }
+.badge.bad { background: #fef2f2; color: #b91c1c; }
+.badge.discovered { background: #eff6ff; color: #1d4ed8; }
+.badge.manual { background: #fdf2f8; color: #9d174d; }
+.form-row { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; align-items: center; margin-bottom: 10px; }
+.form-row label { font-weight: 600; font-size: 13px; color: #475569; }
+input, select, textarea { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; }
+.btn { display: inline-block; background: #2563eb; color: #fff; padding: 10px 18px; border-radius: 8px; border: 0; font-weight: 700; cursor: pointer; font-size: 13px; }
+.btn.small { padding: 6px 12px; font-size: 12px; }
+.section { margin-top: 28px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Validator / Registry</h1>
+  <div class="nav">
+    <a href="/">Reports</a>
+    <a href="/validator" class="primary">Validator</a>
+    <a href="/graphs">Graphs</a>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <h2>Registry (Fields)</h2>
+    <table>
+      <thead><tr><th>Field</th><th>Aliases</th><th>Unit</th><th>Region</th><th>Status</th><th>Tags</th></tr></thead>
+      <tbody>
+        {% for f in fields %}
+        <tr>
+          <td><strong>{{ f.canonical_name }}</strong></td>
+          <td>{{ f.aliases | join(", ") }}</td>
+          <td>{{ f.unit }}</td>
+          <td>{{ f.region }}</td>
+          <td>
+            <span class="badge {% if f.status == 'MANUAL' %}manual{% elif f.status == 'DISCOVERED' %}discovered{% else %}ok{% endif %}">{{ f.status }}</span>
+          </td>
+          <td>{{ f.tags | join(", ") }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Add Field (Manual)</h2>
+    <form id="addFieldForm" onsubmit="event.preventDefault(); addField();">
+      <div class="form-row"><label>Canonical Name</label><input name="canonical_name" required></div>
+      <div class="form-row"><label>Aliases (comma)</label><input name="aliases"></div>
+      <div class="form-row"><label>Unit</label><input name="unit"></div>
+      <div class="form-row"><label>Region</label><input name="region"></div>
+      <div class="form-row"><label>Description</label><textarea name="description" rows="2"></textarea></div>
+      <div class="form-row"><label>Tag</label><input name="tag"></div>
+      <div class="form-row"><label>Field ID</label><input name="field_id"></div>
+      <div class="form-row"><label>Status</label><select name="status"><option>MANUAL</option><option>DISCOVERED</option></select></div>
+      <button class="btn" type="submit">Add Field</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Tags</h2>
+    <table>
+      <thead><tr><th>Tag</th><th>Aliases</th><th>Description</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for t in tags %}
+        <tr>
+          <td><strong>{{ t.canonical_tag }}</strong></td>
+          <td>{{ t.aliases | join(", ") }}</td>
+          <td>{{ t.description }}</td>
+          <td><span class="badge {% if t.status == 'MANUAL' %}manual{% else %}discovered{% endif %}">{{ t.status }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Add Tag (Manual)</h2>
+    <form id="addTagForm" onsubmit="event.preventDefault(); addTag();">
+      <div class="form-row"><label>Canonical Tag</label><input name="canonical_tag" required></div>
+      <div class="form-row"><label>Aliases (comma)</label><input name="aliases"></div>
+      <div class="form-row"><label>Description</label><textarea name="description" rows="2"></textarea></div>
+      <button class="btn" type="submit">Add Tag</button>
+    </form>
+  </div>
+</main>
+
+<script>
+function addField() {
+  const fd = new FormData(document.getElementById('addFieldForm'));
+  const payload = {
+    canonical_name: fd.get('canonical_name'),
+    aliases: fd.get('aliases') ? fd.get('aliases').split(',').map(s=>s.trim()).filter(Boolean) : [],
+    unit: fd.get('unit'),
+    region: fd.get('region'),
+    description: fd.get('description'),
+    tag: fd.get('tag'),
+    field_id: fd.get('field_id'),
+    status: fd.get('status')
+  };
+  fetch('/validator/field/add', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)})
+    .then(r=>r.json()).then(d=>{ alert('Field added: '+d.entry.canonical_name); location.reload(); }).catch(e=>alert('Error adding field'));
+}
+function addTag() {
+  const fd = new FormData(document.getElementById('addTagForm'));
+  const payload = {
+    canonical_tag: fd.get('canonical_tag'),
+    aliases: fd.get('aliases') ? fd.get('aliases').split(',').map(s=>s.trim()).filter(Boolean) : [],
+    description: fd.get('description'),
+    status: 'MANUAL'
+  };
+  fetch('/validator/tag/add', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)})
+    .then(r=>r.json()).then(d=>{ alert('Tag added: '+d.entry.canonical_tag); location.reload(); }).catch(e=>alert('Error adding tag'));
+}
+</script>
+</body>
+</html>

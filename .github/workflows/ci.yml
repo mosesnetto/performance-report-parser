@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - run: pip install ruff
+      - name: Ruff check (scoped ruleset)
+        run: ruff check .
+
+  test:
+    name: Test (py${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: "pip"
+      - name: Install tesseract OCR
+        run: sudo apt-get update && sudo apt-get install -y tesseract-ocr
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Verify all modules import
+        run: python -c "import pkgutil, meridian; [__import__('meridian.'+m.name, fromlist=['*']) for m in pkgutil.iter_modules(meridian.__path__)]"
+      - name: Run tests
+        run: pytest
+
+  smoke:
+    name: App boot smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Flask app boots and exposes routes
+        run: |
+          python - <<'PY'
+          from meridian.web import app
+          routes = sorted(r.rule for r in app.url_map.iter_rules())
+          assert len(routes) >= 20, f"expected >=20 routes, got {len(routes)}"
+          client = app.test_client()
+          resp = client.get("/")
+          assert resp.status_code in (200, 302), resp.status_code
+          print(f"OK: boot routes={len(routes)}")
+          PY

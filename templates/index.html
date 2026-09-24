@@ -1,0 +1,5477 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>MERIDIAN Engine Intelligence</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #172033;
+}
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+header {
+    background: #ffffff;
+    border-bottom: 1px solid #dbe3ec;
+
+    padding: 18px 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+header p {
+    margin: 5px 0 0;
+
+    color: #64748b;
+    font-size: 13px;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav a {
+    text-decoration: none;
+
+    padding: 9px 13px;
+
+    border: 1px solid #dbe3ec;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #1f2937;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.nav a.primary {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+}
+
+.badge {
+    padding: 7px 14px;
+
+    border-radius: 999px;
+
+    background: #eef2f7;
+    color: #475569;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.badge.ok {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.badge.busy {
+    background: #fff7ed;
+    color: #9a3412;
+}
+
+.badge.bad {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+/* ============================================================
+   MAIN
+============================================================ */
+
+main {
+    max-width: 1900px;
+
+    margin: 0 auto;
+
+    padding: 28px;
+}
+
+/* ============================================================
+   REPORT SELECTOR
+============================================================ */
+
+.toolbar {
+    display: grid;
+
+    grid-template-columns:
+        minmax(320px, 2fr)
+        minmax(140px, 1fr)
+        minmax(160px, 1fr);
+
+    gap: 12px;
+
+    background: #ffffff;
+
+    border: 1px solid #dbe3ec;
+
+    border-radius: 12px;
+
+    padding: 14px;
+
+    margin-bottom: 18px;
+}
+
+.toolbar label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: #64748b;
+
+    text-transform: uppercase;
+}
+
+.toolbar select {
+    width: 100%;
+    height: 40px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    padding: 0 10px;
+
+    background: #ffffff;
+}
+
+.toolbar-info {
+    padding-top: 10px;
+    font-weight: 700;
+}
+
+/* ============================================================
+   DROP ZONE
+============================================================ */
+
+.drop {
+    background: #ffffff;
+
+    border:
+        2px dashed #aeb9c9;
+
+    border-radius: 16px;
+
+    padding: 50px;
+
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.drop.over {
+    border-color: #2563eb;
+
+    background: #eff6ff;
+}
+
+.icon {
+    margin: 0 auto;
+
+    width: 68px;
+    height: 68px;
+
+    border-radius: 14px;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    display: grid;
+    place-items: center;
+
+    font-weight: 800;
+}
+
+.drop h2 {
+    margin: 16px 0 8px;
+}
+
+.drop p {
+    color: #64748b;
+}
+
+.btn {
+    display: inline-block;
+
+    background: #2563eb;
+    color: #ffffff;
+
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    border: 0;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.filename {
+    margin-top: 14px;
+
+    color: #475569;
+
+    font-size: 13px;
+}
+
+/* ============================================================
+   PROGRESS
+============================================================ */
+
+.progress {
+    margin-top: 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #dbe3ec;
+
+    border-radius: 10px;
+
+    padding: 14px;
+}
+
+.progress-head {
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.bar {
+    height: 8px;
+
+    margin-top: 10px;
+
+    background: #e5e7eb;
+
+    border-radius: 999px;
+
+    overflow: hidden;
+}
+
+.bar > div {
+    height: 100%;
+
+    width: 0;
+
+    background: #2563eb;
+
+    transition: width .2s;
+}
+
+/* ============================================================
+   SUMMARY
+============================================================ */
+
+.summary {
+    margin-top: 18px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.card {
+    background: #ffffff;
+
+    border: 1px solid #dbe3ec;
+
+    border-radius: 10px;
+
+    padding: 16px;
+}
+
+.card span {
+    display: block;
+
+    font-size: 12px;
+
+    color: #64748b;
+}
+
+.card strong {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 24px;
+}
+
+/* ============================================================
+   RESULTS
+============================================================ */
+
+.results {
+    margin-top: 22px;
+
+    background: #ffffff;
+
+    border: 1px solid #dbe3ec;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+.title {
+    padding: 20px 22px;
+}
+
+.title h2 {
+    margin: 0;
+
+    font-size: 18px;
+}
+
+.title p {
+    margin: 5px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+/* ============================================================
+   FILTERS
+============================================================ */
+
+.filters {
+    display: grid;
+
+    grid-template-columns:
+        minmax(320px, 2fr)
+        repeat(3, minmax(160px, 1fr));
+
+    gap: 10px;
+
+    padding: 16px 22px;
+
+    border-top:
+        1px solid #edf0f4;
+
+    border-bottom:
+        1px solid #edf0f4;
+}
+
+.filter label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: #64748b;
+
+    text-transform: uppercase;
+}
+
+/* ============================================================
+   SEARCH
+============================================================ */
+
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+
+    height: 42px;
+
+    padding:
+        0 42px
+        0 36px;
+
+    border:
+        1px solid #cbd5e1;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    font-size: 13px;
+
+    outline: none;
+}
+
+.search-box input:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37,99,235,.10);
+}
+
+.search-icon {
+    position: absolute;
+
+    left: 12px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    color: #64748b;
+
+    pointer-events: none;
+}
+
+.clear-search {
+    position: absolute;
+
+    right: 7px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    width: 28px;
+    height: 28px;
+
+    border: 0;
+
+    border-radius: 6px;
+
+    background: transparent;
+
+    color: #94a3b8;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    display: none;
+}
+
+.search-box.has-value .clear-search {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.search-hint {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 6px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+.search-example {
+    border: 0;
+
+    background: #f1f5f9;
+
+    color: #475569;
+
+    border-radius: 5px;
+
+    padding: 4px 8px;
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+/* ============================================================
+   TABLE INFORMATION
+============================================================ */
+
+.info {
+    padding: 10px 22px;
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    gap: 12px;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.tablewrap {
+    overflow: auto;
+
+    max-height:
+        calc(100vh - 390px);
+
+    min-height:
+        300px;
+
+    position: relative;
+}
+
+/*
+ * IMPORTANT:
+ *
+ * The table has a real sticky header.
+ *
+ * The first four metadata columns are also sticky.
+ */
+
+table {
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    width: max-content;
+
+    min-width: 100%;
+
+    font-size: 13px;
+}
+
+thead {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 30;
+}
+
+th {
+    position: sticky;
+
+    top: 0;
+
+    background: #f8fafc;
+
+    border-bottom:
+        2px solid #cbd5e1;
+
+    border-right:
+        1px solid #e5eaf0;
+
+    padding:
+        11px 12px;
+
+    height: 42px;
+
+    white-space: nowrap;
+
+    text-align: left;
+
+    font-size: 11px;
+
+    color: #334155;
+
+    z-index: 30;
+}
+
+/*
+ * Fixed first column.
+ */
+
+th.col-field {
+    left: 0;
+
+    z-index: 50;
+
+    min-width: 250px;
+
+    width: 250px;
+}
+
+/*
+ * Fixed metadata columns.
+ */
+
+th.col-unit {
+    left: 250px;
+
+    z-index: 49;
+
+    min-width: 80px;
+
+    width: 80px;
+}
+
+th.col-region {
+    left: 330px;
+
+    z-index: 48;
+
+    min-width: 100px;
+
+    width: 100px;
+}
+
+th.col-page {
+    left: 430px;
+
+    z-index: 47;
+
+    min-width: 55px;
+
+    width: 55px;
+}
+
+/*
+ * Sticky cells.
+ */
+
+td {
+    padding:
+        9px 12px;
+
+    border-bottom:
+        1px solid #edf0f4;
+
+    border-right:
+        1px solid #edf0f4;
+
+    white-space:
+        nowrap;
+
+    background:
+        #ffffff;
+
+    height: 40px;
+}
+
+td.field {
+    position: sticky;
+
+    left: 0;
+
+    z-index: 20;
+
+    min-width: 250px;
+
+    width: 250px;
+
+    font-weight: 700;
+
+    background: #ffffff;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+td.meta-unit {
+    position: sticky;
+
+    left: 250px;
+
+    z-index: 19;
+
+    min-width: 80px;
+
+    width: 80px;
+
+    background: #ffffff;
+
+    color: #475569;
+}
+
+td.meta-region {
+    position: sticky;
+
+    left: 330px;
+
+    z-index: 18;
+
+    min-width: 100px;
+
+    width: 100px;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+td.meta-page {
+    position: sticky;
+
+    left: 430px;
+
+    z-index: 17;
+
+    min-width: 55px;
+
+    width: 55px;
+
+    background: #ffffff;
+
+    color: #475569;
+}
+
+/*
+ * Slight separation after fixed columns.
+ */
+
+th.col-page,
+td.meta-page {
+    display: none !important;
+}
+
+/*
+ * Measurement cells.
+ */
+
+td.measurement {
+    min-width: 92px;
+
+    width: 92px;
+
+    text-align: right;
+
+    font-variant-numeric:
+        tabular-nums;
+}
+
+td.measurement:hover {
+    background: #eff6ff;
+}
+
+td.empty {
+    color: #cbd5e1;
+
+    cursor: default;
+}
+
+td.warn {
+    background: #fff7ed;
+}
+
+/*
+ * Separate value cells must never wrap.
+ */
+
+td.single-value {
+    min-width: 92px;
+
+    width: 92px;
+
+    text-align: right;
+
+    font-variant-numeric:
+        tabular-nums;
+}
+
+/*
+ * Multi-column rows render a compact nested measurement grid inside the
+ * single Value/Measurements cell. Its headers are scoped to that row only.
+ */
+
+td.measurements-cell {
+    min-width: 140px;
+
+    width: auto;
+
+    text-align: left;
+
+    padding: 0;
+
+    overflow-x: auto;
+}
+
+/*
+ * Row-owned measurement grid.
+ *
+ * This is a DIV/CSS-grid structure, NOT a nested table, so the browser does
+ * NOT treat its headers (REF, AVG, CYL1, MCR, BRG, ...) as part of the parent
+ * table. Every data row owns exactly its own columns.
+ */
+
+.measurement-grid {
+    display: inline-grid;
+
+    column-gap: 2px;
+
+    row-gap: 4px;
+
+    align-items: stretch;
+
+    padding: 6px 8px;
+
+    font-variant-numeric:
+        tabular-nums;
+}
+
+.measurement-header {
+    background: #f1f5f9;
+
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    padding: 4px 8px;
+
+    text-align: right;
+
+    white-space: nowrap;
+
+    border: 1px solid #e2e8f0;
+
+    border-bottom:
+        2px solid #cbd5e1;
+}
+
+.measurement-value {
+    padding: 4px 8px;
+
+    text-align: right;
+
+    white-space: nowrap;
+
+    border: 1px solid #e2e8f0;
+
+    cursor: pointer;
+
+    background: #ffffff;
+}
+
+.measurement-value.empty {
+    color: #cbd5e1;
+
+    cursor: default;
+}
+
+.measurement-value.warn {
+    background: #fff7ed;
+}
+
+.measurement-value:hover:not(.empty) {
+    background: #eff6ff;
+}
+
+/* ============================================================
+   DETAILS PANEL
+============================================================ */
+
+.panel {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+
+    width:
+        min(
+            480px,
+            95vw
+        );
+
+    height: 100vh;
+
+    background: #ffffff;
+
+    box-shadow:
+        -10px 0 30px
+        rgba(0,0,0,.16);
+
+    z-index: 100;
+
+    overflow: auto;
+}
+
+.panel-header {
+    position: sticky;
+
+    top: 0;
+
+    background: #ffffff;
+
+    padding: 16px;
+
+    border-bottom:
+        1px solid #e5e7eb;
+}
+
+.panel-header h3 {
+    margin: 0;
+}
+
+.close {
+    position: absolute;
+
+    right: 10px;
+    top: 9px;
+
+    border: 0;
+
+    background: transparent;
+
+    font-size: 26px;
+
+    cursor: pointer;
+}
+
+.panelbody {
+    padding: 18px;
+}
+
+.detail {
+    padding: 12px 0;
+
+    border-bottom:
+        1px solid #edf0f4;
+}
+
+.label {
+    font-size: 11px;
+
+    color: #64748b;
+
+    text-transform: uppercase;
+
+    font-weight: 700;
+
+    margin-bottom: 5px;
+}
+
+.detail-main {
+    font-size: 28px;
+
+    font-weight: 800;
+}
+
+/* ============================================================
+   ERROR
+============================================================ */
+
+.error {
+    margin-top: 18px;
+
+    background: #fef2f2;
+
+    border:
+        1px solid #fecaca;
+
+    color: #991b1b;
+
+    padding: 14px;
+
+    border-radius: 10px;
+}
+
+.error pre {
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media(max-width:1200px) {
+
+    .summary {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0,1fr)
+            );
+    }
+
+    .toolbar {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .filters {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0,1fr)
+            );
+    }
+
+    .search-filter {
+        grid-column: 1 / -1;
+    }
+
+}
+
+@media(max-width:800px) {
+
+    header {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    main {
+        padding: 14px;
+    }
+
+    .summary {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0,1fr)
+            );
+    }
+
+    .toolbar,
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- ==========================================================
+     HEADER
+=========================================================== -->
+
+<header>
+
+    <div>
+
+        <h1>
+            MERIDIAN&nbsp;Engine&nbsp;Intelligence
+        </h1>
+
+        <p>
+            Upload, switch reports, search measurements, and inspect extracted values.
+        </p>
+
+    </div>
+
+
+    <div class="nav">
+
+        <a
+            href="/graphs"
+            class="primary"
+        >
+            Graphs
+        </a>
+
+
+        <div
+            id="status"
+            class="badge"
+        >
+            Ready
+        </div>
+
+    </div>
+
+</header>
+
+
+<main>
+
+
+<!-- ==========================================================
+     REPORT SELECTOR
+=========================================================== -->
+
+<section class="toolbar">
+
+    <div>
+
+        <label for="reportSelect">
+            Current PDF / Report
+        </label>
+
+
+        <select id="reportSelect">
+
+            <option value="">
+                Choose a report...
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div>
+
+        <label>
+            Uploaded reports
+        </label>
+
+
+        <div
+            id="reportCount"
+            class="toolbar-info"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <div>
+
+        <label>
+            Graphs
+        </label>
+
+
+        <a
+            href="/graphs"
+            class="nav"
+            style="
+                display:inline-flex;
+                margin-top:5px;
+            "
+        >
+            Open Graphs →
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================================
+     DASHBOARD
+========================================================== -->
+
+<section
+    class="results hidden"
+    id="dashboard"
+    style="margin-top:18px;"
+>
+
+    <div class="title">
+
+        <h2>
+            Report dashboard
+        </h2>
+
+        <p>
+            Summary of every uploaded report, its audit status, and quick links.
+        </p>
+
+    </div>
+
+
+    <div
+        id="dashList"
+        style="
+            padding:16px 22px;
+            display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+            gap:14px;
+        "
+    ></div>
+
+</section>
+
+
+<!-- ==========================================================
+     DROP
+========================================================== -->
+
+<section
+    id="drop"
+    class="drop"
+>
+
+    <div class="icon">
+        PDF
+    </div>
+
+
+    <h2>
+        Drop your performance report here
+    </h2>
+
+
+    <p>
+        Drag and drop a PDF or choose one from your computer
+    </p>
+
+
+    <label class="btn">
+
+        Choose PDF
+
+
+        <input
+            id="file"
+            type="file"
+            accept="application/pdf,.pdf"
+            hidden
+        >
+
+    </label>
+
+
+    <div
+        id="filename"
+        class="filename"
+    ></div>
+
+</section>
+
+
+<!-- ==========================================================
+     PROGRESS
+=========================================================== -->
+
+<section
+    id="progress"
+    class="progress hidden"
+>
+
+    <div class="progress-head">
+
+        <span id="pt">
+            Processing...
+        </span>
+
+
+        <span id="pp">
+            0%
+        </span>
+
+    </div>
+
+
+    <div class="bar">
+
+        <div id="pb"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================================
+     SUMMARY
+=========================================================== -->
+
+<section
+    id="summary"
+    class="summary hidden"
+>
+
+    <div class="card">
+        <span>Expected fields</span>
+        <strong id="expected">0</strong>
+    </div>
+
+
+    <div class="card">
+        <span>Fields found</span>
+        <strong id="found">0</strong>
+    </div>
+
+
+    <div class="card">
+        <span>Measurement cells</span>
+        <strong id="cells">0</strong>
+    </div>
+
+
+    <div class="card">
+        <span>Errors</span>
+        <strong id="errors">0</strong>
+    </div>
+
+
+    <div class="card">
+        <span>OCR warnings</span>
+        <strong id="warnings">0</strong>
+    </div>
+
+
+    <div class="card">
+        <span>Empty / indicator</span>
+        <strong id="empty">0</strong>
+    </div>
+
+</section>
+
+
+<!-- ==========================================================
+     RESULTS
+=========================================================== -->
+
+<section
+    id="results"
+    class="results hidden"
+>
+
+    <div class="title">
+
+        <h2 id="reportTitle">
+            Extracted measurements
+        </h2>
+
+
+        <p>
+            Search by parameter, column, value, region, page, or OCR text.
+        </p>
+
+        <button
+            id="downloadPdf"
+            class="btn"
+            type="button"
+            style="margin-top: 10px;"
+            disabled
+        >
+            Download PDF
+        </button>
+
+    </div>
+
+
+    <!-- ======================================================
+         FILTERS
+    ======================================================= -->
+
+    <div class="filters">
+
+        <div class="filter search-filter">
+
+            <label>
+                Search measurements
+            </label>
+
+
+            <div class="search-box">
+
+                <span class="search-icon">
+                    ⌕
+                </span>
+
+
+                <input
+                    id="search"
+                    type="search"
+                    placeholder="Search fields, columns or values..."
+                    autocomplete="off"
+                >
+
+
+                <button
+                    id="clearSearch"
+                    class="clear-search"
+                    type="button"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="search-hint">
+
+                <span>
+                    Try:
+                </span>
+
+
+                <button
+                    class="search-example"
+                    data-search="liner wall"
+                >
+                    liner wall
+                </button>
+
+
+                <button
+                    class="search-example"
+                    data-search="CYL5"
+                >
+                    CYL5
+                </button>
+
+
+                <button
+                    class="search-example"
+                    data-search="Specific FOC"
+                >
+                    Specific FOC
+                </button>
+
+
+                <button
+                    class="search-example"
+                    data-search="sulfur"
+                >
+                    sulfur
+                </button>
+
+
+                <button
+                    class="search-example"
+                    data-search="125"
+                >
+                    125
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="filter">
+
+            <label>
+                Region
+            </label>
+
+
+            <select id="region">
+
+                <option value="">
+                    All regions
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="filter">
+
+            <label>
+                Page
+            </label>
+
+
+            <select id="page">
+
+                <option value="">
+                    All pages
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="filter">
+
+            <label>
+                Field
+            </label>
+
+
+            <select id="field">
+
+                <option value="">
+                    All fields
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div class="info">
+
+        <span id="count">
+            0 fields
+        </span>
+
+
+        <span>
+            Click a value to inspect OCR details
+        </span>
+
+    </div>
+
+
+    <!-- ======================================================
+         TABLE
+    ======================================================= -->
+
+    <div class="tablewrap">
+
+        <table>
+
+            <thead id="thead"></thead>
+
+            <tbody id="tbody"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================================
+     ERROR
+=========================================================== -->
+
+<section
+    id="error"
+    class="error hidden"
+>
+
+    <strong>
+        Parser error
+    </strong>
+
+
+    <pre id="errortxt"></pre>
+
+</section>
+
+
+<!-- ==========================================================
+     DETAILS
+=========================================================== -->
+
+<aside
+    id="panel"
+    class="panel hidden"
+>
+
+    <div class="panel-header">
+
+        <h3>
+            Cell details
+        </h3>
+
+
+        <button
+            id="closePanel"
+            class="close"
+            type="button"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div
+        id="panelbody"
+        class="panelbody"
+    ></div>
+
+</aside>
+
+
+<!-- ==========================================================
+     AUDIT PANEL
+========================================================== -->
+
+<aside
+    id="auditPanel"
+    class="panel hidden"
+>
+
+    <div class="panel-header">
+
+        <h3>
+            Audit — <span id="auditTitle">report</span>
+        </h3>
+
+
+        <button
+            id="closeAudit"
+            class="close"
+            type="button"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div
+        id="auditbody"
+        class="panelbody"
+    ></div>
+
+</aside>
+
+
+<aside
+    id="validationPanel"
+    class="panel hidden"
+>
+
+    <div class="panel-header">
+
+        <h3>
+            Validation — <span id="validationTitle">report</span>
+        </h3>
+
+        <button
+            id="closeValidation"
+            class="close"
+            type="button"
+        >
+            ×
+        </button>
+
+    </div>
+
+    <div
+        id="validationBody"
+        class="panelbody"
+    ></div>
+
+</aside>
+
+
+</main>
+
+
+<script>
+
+"use strict";
+
+
+/* ============================================================
+   STATE
+============================================================ */
+
+let DATA = null;
+
+
+/* ============================================================
+   DOM
+============================================================ */
+
+function $(id) {
+
+    return document.getElementById(
+        id
+    );
+
+}
+
+
+/* ============================================================
+   NORMALIZE API DATA
+============================================================ */
+
+function normalizeData(
+    payload
+) {
+
+    if (!payload) {
+
+        return {
+            rows: [],
+            regions: [],
+            pages: [],
+            columns: []
+        };
+
+    }
+
+
+    let source =
+        payload;
+
+
+    /*
+     * Unwrap nested data.
+     */
+
+    if (
+        source.data &&
+        typeof source.data === "object"
+    ) {
+
+        source =
+            source.data;
+
+    }
+
+
+    if (
+        source.report &&
+        typeof source.report === "object"
+    ) {
+
+        source =
+            source.report;
+
+    }
+
+
+    const rawRows =
+        Array.isArray(
+            source.rows
+        )
+            ? source.rows
+            : (
+                Array.isArray(
+                    source.fields
+                )
+                    ? source.fields
+                    : []
+            );
+
+
+    const rows =
+        rawRows.map(
+            function(row) {
+
+                return {
+
+                    field_id:
+                        row.field_id ??
+                        row.id ??
+                        "",
+
+                    field_name:
+                        row.field_name ??
+                        row.field ??
+                        row.name ??
+                        "",
+
+                    page:
+                        row.page ??
+                        "",
+
+                    region:
+                        row.region ??
+                        "",
+
+                    unit:
+                        row.unit ??
+                        "",
+
+                    row_text:
+                        row.row_text ??
+                        row.source_row ??
+                        "",
+
+                    cells:
+                        normalizeCells(
+                            row.cells
+                        )
+
+                };
+
+            }
+        );
+
+
+    /*
+     * Derive missing regions.
+     */
+
+    let regions =
+        Array.isArray(
+            source.regions
+        )
+            ? source.regions
+            : [];
+
+
+    if (
+        regions.length === 0
+    ) {
+
+        regions =
+            unique(
+                rows.map(
+                    function(row) {
+                        return row.region;
+                    }
+                )
+            )
+            .filter(Boolean);
+
+    }
+
+
+    /*
+     * Derive pages.
+     */
+
+    let pages =
+        Array.isArray(
+            source.pages
+        )
+            ? source.pages
+            : [];
+
+
+    if (
+        pages.length === 0
+    ) {
+
+        pages =
+            unique(
+                rows.map(
+                    function(row) {
+                        return row.page;
+                    }
+                )
+            )
+            .filter(
+                function(value) {
+
+                    return (
+                        value !== "" &&
+                        value !== null &&
+                        value !== undefined
+                    );
+
+                }
+            );
+
+    }
+
+
+    /*
+     * Derive logical columns.
+     */
+
+    let columns =
+        Array.isArray(
+            source.columns
+        )
+            ? source.columns.slice()
+            : [];
+
+
+    if (
+        columns.length === 0
+    ) {
+
+        const set =
+            new Set();
+
+
+        for (
+            const row
+            of rows
+        ) {
+
+            for (
+                const column
+                of Object.keys(
+                    row.cells || {}
+                )
+            ) {
+
+                if (
+                    String(
+                        column
+                    )
+                    .trim()
+                    .toUpperCase()
+                    ===
+                    "VALUE"
+                ) {
+
+                    continue;
+
+                }
+
+
+                set.add(
+                    column
+                );
+
+            }
+
+        }
+
+
+        columns =
+            Array.from(
+                set
+            );
+
+    }
+
+
+    /*
+     * Never display internal VALUE as a second visible column.
+     */
+
+    columns =
+        columns.filter(
+            function(column) {
+
+                return (
+                    String(
+                        column
+                    )
+                    .trim()
+                    .toUpperCase()
+                    !==
+                    "VALUE"
+                );
+
+            }
+        );
+
+
+    return {
+        rows,
+        regions,
+        pages,
+        columns
+    };
+
+}
+
+
+/* ============================================================
+   NORMALIZE CELLS
+============================================================ */
+
+function normalizeCells(
+    raw
+) {
+
+    if (
+        !raw ||
+        typeof raw !== "object"
+    ) {
+
+        return {};
+
+    }
+
+
+    const result = {};
+
+
+    for (
+        const [
+            column,
+            value
+        ]
+        of Object.entries(
+            raw
+        )
+    ) {
+
+        if (
+            Array.isArray(
+                value
+            )
+        ) {
+
+            /*
+             * KEEP ALL VALUES.
+             *
+             * We deliberately do NOT join them.
+             */
+
+            result[column] =
+                value.slice();
+
+        }
+        else if (
+            value &&
+            typeof value === "object"
+        ) {
+
+            result[column] =
+                [value];
+
+        }
+        else if (
+            value !== null &&
+            value !== undefined &&
+            value !== ""
+        ) {
+
+            result[column] =
+                [
+                    {
+                        value: value
+                    }
+                ];
+
+        }
+        else {
+
+            result[column] =
+                [];
+
+        }
+
+    }
+
+
+    return result;
+
+}
+
+
+/* ============================================================
+   UNIQUE
+============================================================ */
+
+function unique(
+    values
+) {
+
+    return Array.from(
+        new Set(
+            values
+        )
+    ).sort(
+        function(a,b) {
+
+            const na =
+                Number(a);
+
+            const nb =
+                Number(b);
+
+
+            if (
+                Number.isFinite(na) &&
+                Number.isFinite(nb)
+            ) {
+
+                return na - nb;
+
+            }
+
+
+            return String(a)
+                .localeCompare(
+                    String(b)
+                );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   CELL ACCESS
+============================================================ */
+
+function getCells(
+    row,
+    column
+) {
+
+    if (
+        !row ||
+        !row.cells
+    ) {
+
+        return [];
+
+    }
+
+
+    const raw =
+        row.cells[
+            column
+        ];
+
+
+    if (!raw) {
+
+        return [];
+
+    }
+
+
+    return Array.isArray(
+        raw
+    )
+        ? raw
+        : [raw];
+
+}
+
+
+/* ============================================================
+   PRIMARY VALUE
+============================================================ */
+
+function getPrimaryValue(
+    row
+) {
+
+    /*
+     * Generic VALUE only represents a genuine single-value field.
+     */
+
+    const cells =
+        getCells(
+            row,
+            "VALUE"
+        );
+
+
+    if (
+        cells.length
+    ) {
+
+        return cells[0];
+
+    }
+
+
+    /*
+     * Only infer a value if there is exactly ONE
+     * non-internal cell in the row.
+     */
+
+    const all = [];
+
+
+    for (
+        const [
+            column,
+            rawCells
+        ]
+        of Object.entries(
+            row.cells || {}
+        )
+    ) {
+
+        if (
+            String(
+                column
+            )
+            .trim()
+            .toUpperCase()
+            ===
+            "VALUE"
+        ) {
+
+            continue;
+
+        }
+
+
+        const cells =
+            Array.isArray(
+                rawCells
+            )
+                ? rawCells
+                : [rawCells];
+
+
+        for (
+            const cell
+            of cells
+        ) {
+
+            all.push(
+                cell
+            );
+
+        }
+
+    }
+
+
+    if (
+        all.length === 1
+    ) {
+
+        return all[0];
+
+    }
+
+
+    return null;
+
+}
+
+
+/* ============================================================
+   CELL DISPLAY VALUE
+============================================================ */
+
+function displayValue(
+    cell
+) {
+
+    if (!cell) {
+
+        return "—";
+
+    }
+
+
+    if (
+        cell.value !== null &&
+        cell.value !== undefined
+    ) {
+
+        return String(
+            cell.value
+        );
+
+    }
+
+
+    if (
+        cell.raw_text !== null &&
+        cell.raw_text !== undefined &&
+        cell.raw_text !== ""
+    ) {
+
+        return String(
+            cell.raw_text
+        );
+
+    }
+
+
+    return "—";
+
+}
+
+
+/* ============================================================
+   ESCAPE HTML
+============================================================ */
+
+function escapeHtml(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+
+/* ============================================================
+   WARNING
+============================================================ */
+
+function hasWarning(
+    cell
+) {
+
+    if (!cell) {
+
+        return false;
+
+    }
+
+
+    const confidence =
+        Number(
+            cell.confidence ||
+            0
+        );
+
+
+    if (
+        confidence > 0 &&
+        confidence < 0.60
+    ) {
+
+        return true;
+
+    }
+
+
+    return (
+        Array.isArray(
+            cell.flags
+        ) &&
+        cell.flags.length > 0
+    );
+
+}
+
+
+/* ============================================================
+   STATUS
+============================================================ */
+
+function setStatus(
+    text,
+    cls
+) {
+
+    $("status").textContent =
+        text;
+
+
+    $("status").className =
+        "badge " +
+        (
+            cls || ""
+        );
+
+}
+
+
+/* ============================================================
+   PROGRESS
+============================================================ */
+
+function setProgress(
+    percent,
+    text
+) {
+
+    $("progress")
+        .classList
+        .remove(
+            "hidden"
+        );
+
+
+    $("pb").style.width =
+        percent + "%";
+
+
+    $("pp").textContent =
+        percent + "%";
+
+
+    $("pt").textContent =
+        text;
+
+}
+
+
+/* ============================================================
+   SUMMARY
+============================================================ */
+
+function updateSummary(
+    summary
+) {
+
+    summary =
+        summary ||
+        {};
+
+
+    $("expected")
+        .textContent =
+        summary.expected_fields ??
+        (
+            DATA
+                ? DATA.rows.length
+                : 0
+        );
+
+
+    $("found")
+        .textContent =
+        summary.fields_found ??
+        0;
+
+
+    $("cells")
+        .textContent =
+        summary.measurement_cells ??
+        0;
+
+
+    $("errors")
+        .textContent =
+        summary.errors ??
+        0;
+
+
+    $("warnings")
+        .textContent =
+        summary.warnings ??
+        summary.validation_issues ??
+        0;
+
+
+    $("empty")
+        .textContent =
+        summary.empty_source_cells ??
+        0;
+
+}
+
+
+/* ============================================================
+   LOAD REPORT LIST
+============================================================ */
+
+async function loadReports() {
+
+    const response =
+        await fetch(
+            "/api/reports"
+        );
+
+
+    const result =
+        await response.json();
+
+
+    if (
+        !response.ok ||
+        !result.ok
+    ) {
+
+        throw new Error(
+            result.error ||
+            "Failed to load reports."
+        );
+
+    }
+
+
+    const reports =
+        result.reports ||
+        [];
+
+
+    $("reportCount")
+        .textContent =
+        reports.length;
+
+
+    const select =
+        $("reportSelect");
+
+
+    select.innerHTML =
+        '<option value="">Choose a report...</option>';
+
+
+    for (
+        const report
+        of reports
+    ) {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            report.job_id;
+
+
+        option.textContent =
+            report.filename;
+
+
+        select.appendChild(
+            option
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   LOAD REPORT
+============================================================ */
+
+async function loadReport(
+    jobId
+) {
+
+    if (!jobId) {
+
+        return;
+
+    }
+
+
+    setStatus(
+        "Loading",
+        "busy"
+    );
+
+
+    const response =
+        await fetch(
+            "/api/report/" +
+            encodeURIComponent(
+                jobId
+            )
+        );
+
+
+    const result =
+        await response.json();
+
+
+    if (
+        !response.ok ||
+        !result.ok
+    ) {
+
+        throw new Error(
+            result.error ||
+            "Could not load report."
+        );
+
+    }
+
+
+    DATA =
+        normalizeData(
+            result.data ??
+            result.report ??
+            result
+        );
+
+
+    updateSummary(
+        result.summary ||
+        {}
+    );
+
+
+    $("reportTitle")
+        .textContent =
+        "Extracted measurements — " +
+        (
+            result.filename ||
+            "Selected report"
+        );
+
+
+    buildFilters();
+
+    render();
+
+
+    $("summary")
+        .classList
+        .remove(
+            "hidden"
+        );
+
+
+    $("results")
+        .classList
+        .remove(
+            "hidden"
+        );
+
+
+    /*
+     * Enable PDF download button.
+     */
+    $("downloadPdf").disabled = false;
+
+
+    /*
+     * Load audit for the field-detail statuses.
+     */
+
+    try {
+
+        const auditResp =
+            await fetch(
+                "/api/report/" +
+                encodeURIComponent(
+                    jobId
+                ) +
+                "/audit"
+            );
+
+
+        const auditData =
+            await auditResp.json();
+
+
+        if (
+            auditData.ok
+        ) {
+
+            AUDIT =
+                auditData;
+
+        }
+
+    }
+    catch(error) {
+
+        AUDIT =
+            null;
+
+    }
+
+
+    await renderDashboard();
+
+
+    setStatus(
+        "Ready",
+        "ok"
+    );
+
+}
+
+
+/* ============================================================
+   RENDER DASHBOARD
+=========================================================== */
+
+async function renderDashboard() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/reports"
+            );
+
+
+        const result =
+            await response.json();
+
+
+        const reports =
+            result.reports ||
+            [];
+
+
+        $("dashList")
+            .innerHTML =
+            "";
+
+
+        for (
+            const report
+            of reports
+        ) {
+
+            const counts =
+                report.audit_counts ||
+                {};
+
+
+            const missing =
+                counts.fields_missing ??
+                "—";
+
+
+            const ambiguous =
+                counts.ocr_ambiguous ??
+                "—";
+
+
+            const errors =
+                counts.errors ??
+                "—";
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "card";
+
+
+            const span =
+                document.createElement(
+                    "span"
+                );
+
+
+            span.textContent =
+                "assets · ";
+
+            const date =
+                report.report_date ?
+                report.report_date.filename_hint :
+                report.filename;
+
+
+            card.innerHTML =
+                `
+                <span>${escapeHtml(report.filename)}</span>
+                <div style="font-size:13px;color:#475569;margin:6px 0;">
+                    Uploaded: ${escapeHtml(report.uploaded_at || "—")}<br>
+                    Fields registered: <strong>125</strong> / 125 · Missing: <strong>${escapeHtml(missing)}</strong><br>
+                    OCR ambiguous: <strong>${escapeHtml(ambiguous)}</strong> · Errors/malformed: <strong>${escapeHtml(errors)}</strong><br>
+                    <span style="color:#94a3b8;font-size:11px;">${escapeHtml(date)}</span>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
+                    <button class="btn" type="button" data-open="${escapeHtml(report.job_id)}">Measurements</button>
+                    <a class="btn" href="/graphs">Graphs</a>
+                    <a class="btn" href="/analytics">Analytics</a>
+                    <button class="btn" type="button" data-audit="${escapeHtml(report.job_id)}" data-name="${escapeHtml(report.filename)}">Audit</button>
+                    <button class="btn" type="button" data-validation="${escapeHtml(report.job_id)}" data-name="${escapeHtml(report.filename)}">Validation</button>
+                </div>
+                `;
+
+
+            card
+                .querySelector(
+                    "[data-open]"
+                )
+                .addEventListener(
+                    "click",
+                    function() {
+
+                        $("reportSelect")
+                            .value =
+                            report.job_id;
+
+
+                        loadReport(
+                            report.job_id
+                        );
+
+                    }
+                );
+
+
+            card
+                .querySelector(
+                    "[data-audit]"
+                )
+                .addEventListener(
+                    "click",
+                    function() {
+
+                        showAudit(
+                            this.dataset.audit,
+                            this.dataset.name
+                        );
+
+                    }
+                );
+
+
+            card
+                .querySelector(
+                    "[data-validation]"
+                )
+                .addEventListener(
+                    "click",
+                    function() {
+
+                        showValidation(
+                            this.dataset.validation,
+                            this.dataset.name
+                        );
+
+                    }
+                );
+
+
+            $("dashList")
+                .appendChild(
+                    card
+                );
+
+        }
+
+
+        $("dashboard")
+            .classList
+            .remove(
+                "hidden"
+            );
+
+
+    }
+    catch(error) {
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   FILTER OPTIONS
+============================================================ */
+
+function buildFilters() {
+
+    if (!DATA) {
+
+        return;
+
+    }
+
+
+    const region =
+        $("region");
+
+
+    const page =
+        $("page");
+
+
+    const field =
+        $("field");
+
+
+    region.innerHTML =
+        '<option value="">All regions</option>';
+
+
+    page.innerHTML =
+        '<option value="">All pages</option>';
+
+
+    field.innerHTML =
+        '<option value="">All fields</option>';
+
+
+    for (
+        const value
+        of DATA.regions
+    ) {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            value;
+
+
+        option.textContent =
+            value;
+
+
+        region.appendChild(
+            option
+        );
+
+    }
+
+
+    for (
+        const value
+        of DATA.pages
+    ) {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            value;
+
+
+        option.textContent =
+            "Page " +
+            value;
+
+
+        page.appendChild(
+            option
+        );
+
+    }
+
+
+    const seen =
+        new Set();
+
+
+    for (
+        const row
+        of DATA.rows
+    ) {
+
+        if (
+            seen.has(
+                row.field_id
+            )
+        ) {
+
+            continue;
+
+        }
+
+
+        seen.add(
+            row.field_id
+        );
+
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            row.field_id;
+
+
+        option.textContent =
+            row.field_name;
+
+
+        field.appendChild(
+            option
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   FILTERED ROWS
+============================================================ */
+
+function filteredRows() {
+
+    if (!DATA) {
+
+        return [];
+
+    }
+
+
+    const query =
+        $("search")
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    const region =
+        $("region")
+            .value;
+
+
+    const page =
+        $("page")
+            .value;
+
+
+    const field =
+        $("field")
+            .value;
+
+
+    return DATA.rows.filter(
+        function(row) {
+
+            if (
+                region &&
+                row.region !== region
+            ) {
+
+                return false;
+
+            }
+
+
+            if (
+                page &&
+                String(
+                    row.page
+                ) !==
+                String(
+                    page
+                )
+            ) {
+
+                return false;
+
+            }
+
+
+            if (
+                field &&
+                row.field_id !== field
+            ) {
+
+                return false;
+
+            }
+
+
+            if (!query) {
+
+                return true;
+
+            }
+
+
+            let text = [
+
+                row.field_id,
+                row.field_name,
+                row.region,
+                row.page,
+                row.unit,
+                row.row_text
+
+            ]
+            .join(" ")
+            .toLowerCase();
+
+
+            for (
+                const [
+                    column,
+                    rawCells
+                ]
+                of Object.entries(
+                    row.cells || {}
+                )
+            ) {
+
+                text +=
+                    " " +
+                    String(
+                        column
+                    ).toLowerCase();
+
+
+                const cells =
+                    Array.isArray(
+                        rawCells
+                    )
+                        ? rawCells
+                        : [rawCells];
+
+
+                for (
+                    const cell
+                    of cells
+                ) {
+
+                    text +=
+                        " " +
+                        displayValue(
+                            cell
+                        ).toLowerCase();
+
+
+                    text +=
+                        " " +
+                        String(
+                            cell.raw_text ||
+                            ""
+                        ).toLowerCase();
+
+                }
+
+            }
+
+
+            return text.includes(
+                query
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   PER-ROW COLUMN MODEL
+============================================================ */
+
+/*
+ * Return ONLY this row's own measurement columns as descriptor objects
+ * ({key, column, index, label}). Scalar rows (a genuine single VALUE cell, or
+ * exactly one non-internal cell) return no measurement columns, so they never
+ * inherit global/foreign headers.
+ */
+
+function rowColumnsForRow(
+    row
+) {
+
+    if (
+        !row ||
+        !row.cells
+    ) {
+
+        return [];
+
+    }
+
+
+    /*
+     * Use the row's declared schema when present; otherwise its cell keys
+     * minus the internal VALUE marker. Either way the columns are scoped to
+     * THIS row only.
+     */
+
+    let keys =
+        Array.isArray(
+            row.schema
+        ) &&
+        row.schema.length
+            ? row.schema.slice()
+            : Object.keys(
+                row.cells
+            );
+
+
+    keys =
+        keys.filter(
+            function(column) {
+
+                return String(
+                    column
+                )
+                .trim()
+                .toUpperCase() !== "VALUE";
+
+            }
+        );
+
+
+    if (
+        !keys.length
+    ) {
+
+        return [];
+
+    }
+
+
+    const result = [];
+
+
+    for (
+        const column
+        of keys
+    ) {
+
+        const cells =
+            getCells(
+                row,
+                column
+            );
+
+
+        const max =
+            Math.max(
+                cells.length,
+                1
+            );
+
+
+        if (
+            max === 1
+        ) {
+
+            result.push(
+                {
+                    key:
+                        column +
+                        "::0",
+
+                    column,
+
+                    index:
+                        0,
+
+                    label:
+
+                        column
+
+                }
+            );
+
+            continue;
+
+        }
+
+
+        for (
+            let i = 0;
+            i < max;
+            i++
+        ) {
+
+            result.push(
+                {
+                    key:
+                        column +
+                        "::" +
+                        i,
+
+                    column,
+
+                    index:
+
+                        i,
+
+                    label:
+
+                        column +
+                        " " +
+                        (
+                            i + 1
+                        )
+
+                }
+            );
+
+        }
+
+    }
+
+
+    return result;
+
+}
+
+
+/*
+ * Build a row-owned measurement grid whose columns are ONLY the supplied
+ * descriptors for the specific row.
+ *
+ * Returns a <div class="measurement-grid"> (a CSS grid, NOT a nested table)
+ * or null when there are no measurement columns. Placing measurement headers
+ * inside a DIV keeps them out of the parent table's layout algorithm, so they
+ * can never leak into an unrelated field row or into the main <thead>.
+ */
+
+function buildMeasurementGrid(
+    row,
+    columns
+) {
+
+    if (
+        !columns.length
+    ) {
+
+        return null;
+
+    }
+
+
+    const grid =
+        document.createElement(
+            "div"
+        );
+
+
+    grid.className =
+        "measurement-grid";
+
+
+    /*
+     * grid-template-columns: repeat(N, max-content)
+     *
+     * N = number of this row's own columns. There are exactly two grid rows:
+     * the first holds ONLY this row's labels, the second holds ONLY its values.
+     */
+
+    grid.style.gridTemplateColumns =
+        "repeat(" +
+        columns.length +
+        ", max-content)";
+
+
+    /*
+     * First grid row: this row's own column labels.
+     */
+
+    for (
+        const column
+        of columns
+    ) {
+
+        const header =
+            document.createElement(
+                "div"
+            );
+
+
+        header.className =
+            "measurement-header";
+
+
+        header.textContent =
+            column.label;
+
+
+        header.title =
+            column.label;
+
+
+        grid.appendChild(
+            header
+        );
+
+    }
+
+
+    /*
+     * Second grid row: this row's own values.
+     */
+
+    for (
+        const column
+        of columns
+    ) {
+
+        const cellDiv =
+            document.createElement(
+                "div"
+            );
+
+
+        cellDiv.className =
+            "measurement-value";
+
+
+        const cells =
+            getCells(
+                row,
+                column.column
+            );
+
+
+        const cell =
+            cells[
+                column.index
+            ];
+
+
+        if (!cell) {
+
+            cellDiv.classList.add(
+                "empty"
+            );
+
+
+            cellDiv.textContent =
+                "—";
+
+        }
+        else {
+
+            cellDiv.textContent =
+                displayValue(
+                    cell
+                );
+
+
+            if (
+                hasWarning(
+                    cell
+                )
+            ) {
+
+                cellDiv.classList.add(
+                    "warn"
+                );
+
+            }
+
+
+            cellDiv.addEventListener(
+                "click",
+                function() {
+
+                    showPanel(
+                        row,
+                        column.label,
+                        [cell]
+                    );
+
+                }
+            );
+
+        }
+
+
+        grid.appendChild(
+            cellDiv
+        );
+
+    }
+
+
+    return grid;
+
+}
+
+
+/* ============================================================
+   RENDER TABLE
+============================================================ */
+
+function render() {
+
+    if (!DATA) {
+
+        return;
+
+    }
+
+
+    const rows =
+        filteredRows();
+
+
+    $("thead").innerHTML =
+        "";
+
+
+    $("tbody").innerHTML =
+        "";
+
+
+    /* ========================================================
+       HEADER
+    ====================================================== */
+
+    const header =
+        document.createElement(
+            "tr"
+        );
+
+
+    /*
+     * Fixed metadata headers.
+     */
+
+    const fieldHeader =
+        document.createElement(
+            "th"
+        );
+
+
+    fieldHeader.className =
+        "col-field";
+
+
+    fieldHeader.textContent =
+        "Field";
+
+
+    header.appendChild(
+        fieldHeader
+    );
+
+
+    const unitHeader =
+        document.createElement(
+            "th"
+        );
+
+
+    unitHeader.className =
+        "col-unit";
+
+
+    unitHeader.textContent =
+        "Unit";
+
+
+    header.appendChild(
+        unitHeader
+    );
+
+
+    const regionHeader =
+        document.createElement(
+            "th"
+        );
+
+
+    regionHeader.className =
+        "col-region";
+
+
+    regionHeader.textContent =
+        "Region";
+
+
+    header.appendChild(
+        regionHeader
+    );
+
+
+    const pageHeader =
+        document.createElement(
+            "th"
+        );
+
+
+    pageHeader.className =
+        "col-page";
+
+
+    pageHeader.textContent =
+        "Page";
+
+
+    header.appendChild(
+        pageHeader
+    );
+
+
+    /*
+     * Primary Value.
+     *
+     * This is only used for actual single-value fields.
+     */
+
+    const valueHeader =
+        document.createElement(
+            "th"
+        );
+
+
+    valueHeader.textContent =
+        "Value";
+
+
+    valueHeader.title =
+        "Single value for scalar rows; this row's own measurement columns for multi-column rows";
+
+
+    header.appendChild(
+        valueHeader
+    );
+
+
+    /*
+     * Scalar and multi-column rows are rendered in the same Value column.
+     * Scalar rows show a single value; multi-column rows show their OWN nested
+     * measurement grid. Therefore the global header carries NO union of
+     * measurement columns -- each row supplies its own headers, so no row ever
+     * inherits another field's columns.
+     */
+
+    $("thead")
+        .appendChild(
+            header
+        );
+
+
+    /* ========================================================
+       BODY
+    ====================================================== */
+
+    for (
+        const row
+        of rows
+    ) {
+
+        const tr =
+            document.createElement(
+                "tr"
+            );
+
+
+        /* ----------------------------------------------------
+           FIELD
+        ---------------------------------------------------- */
+
+        const field =
+            document.createElement(
+                "td"
+            );
+
+
+        field.className =
+            "field";
+
+
+        field.textContent =
+            row.field_name;
+
+
+        field.title =
+            row.field_name;
+
+
+        field.addEventListener(
+            "click",
+            function() {
+
+                showFieldDetail(
+                    row
+                );
+
+            }
+        );
+
+
+        tr.appendChild(
+            field
+        );
+
+
+        /* ----------------------------------------------------
+           UNIT
+        ---------------------------------------------------- */
+
+        const unit =
+            document.createElement(
+                "td"
+            );
+
+
+        unit.className =
+            "meta-unit";
+
+
+        unit.textContent =
+            row.unit ||
+            "—";
+
+
+        tr.appendChild(
+            unit
+        );
+
+
+        /* ----------------------------------------------------
+           REGION
+        ---------------------------------------------------- */
+
+        const region =
+            document.createElement(
+                "td"
+            );
+
+
+        region.className =
+            "meta-region";
+
+
+        region.textContent =
+            row.region ||
+            "—";
+
+
+        tr.appendChild(
+            region
+        );
+
+
+        /* ----------------------------------------------------
+           PAGE
+        ---------------------------------------------------- */
+
+        const page =
+            document.createElement(
+                "td"
+            );
+
+
+        page.className =
+            "meta-page";
+
+
+        page.textContent =
+            row.page ??
+            "—";
+
+
+        tr.appendChild(
+            page
+        );
+
+
+        /* ----------------------------------------------------
+           VALUE / MEASUREMENTS
+        ----------------------------------------------------
+        Every row emits exactly ONE trailing cell (so exactly five main <td>
+        cells overall per row).
+
+        - Scalar row: has a genuine VALUE cell AND no measurement columns.
+          It renders a single scalar value, NEVER a measurement grid.
+        - Multi-column row: renders ONLY its OWN columns as a DIV/CSS-grid
+          measurement block inside this cell. The headers live in a DIV, so
+          they are never part of the parent table and never leak into other
+          rows or the main <thead>.
+        */
+
+        const value =
+            document.createElement(
+                "td"
+            );
+
+
+        value.className =
+            "single-value";
+
+
+        const rowCols =
+            rowColumnsForRow(
+                row
+            );
+
+
+        const primary =
+            getPrimaryValue(
+                row
+            );
+
+
+        /*
+         * Scalar detection (generic, data-driven):
+         *
+         * row has a genuine VALUE cell (getPrimaryValue) AND no genuine
+         * measurement columns (rowCols). Classified by cell structure only —
+         * never by field ID, field name, region or filename.
+         */
+
+        const isScalar =
+            (
+                primary !== null &&
+                rowCols.length === 0
+            );
+
+
+        if (isScalar) {
+
+            value.textContent =
+                displayValue(
+                    primary
+                );
+
+
+            if (
+                primary.unit
+            ) {
+
+                value.textContent +=
+                    " " +
+                    primary.unit;
+
+            }
+
+
+            if (
+                hasWarning(
+                    primary
+                )
+            ) {
+
+                value.classList.add(
+                    "warn"
+                );
+
+            }
+
+
+            value.addEventListener(
+                "click",
+                function() {
+
+                    showPanel(
+                        row,
+                        "Value",
+                        [primary]
+                    );
+
+                }
+            );
+
+        }
+        else if (
+            rowCols.length > 0
+        ) {
+
+            const grid =
+                buildMeasurementGrid(
+                    row,
+                    rowCols
+                );
+
+
+            if (grid) {
+
+                value.classList.add(
+                    "measurements-cell"
+                );
+
+
+                value.appendChild(
+                    grid
+                );
+
+            }
+            else {
+
+                value.classList.add(
+                    "empty"
+                );
+
+
+                value.textContent =
+                    "—";
+
+            }
+
+        }
+        else {
+
+            value.classList.add(
+                "empty"
+            );
+
+
+            value.textContent =
+                "—";
+
+        }
+
+
+        tr.appendChild(
+            value
+        );
+
+
+        $("tbody")
+            .appendChild(
+                tr
+            );
+
+    }
+
+
+    $("count")
+        .textContent =
+        rows.length +
+        (
+            rows.length === 1
+                ? " field"
+                : " fields"
+        );
+
+}
+
+
+/* ============================================================
+   SCHEMA COLUMNS (detail panel only)
+============================================================ */
+
+/*
+ * Report a single row's semantic column names. Used by the field/OCR detail
+ * panel to describe a row's structure. Table rendering never adds these as
+ * separate table columns; each row owns its columns inside a DIV grid.
+ */
+
+function schemaColumnsForRow(
+    row
+) {
+
+    if (
+        Array.isArray(
+            row.schema
+        ) &&
+        row.schema.length
+    ) {
+
+        return row.schema.slice();
+
+    }
+
+    return Object.keys(
+        row.cells || {}
+    ).filter(
+        function(column) {
+
+            return String(column)
+                .trim()
+                .toUpperCase() !== "VALUE";
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   AUDIT STATE
+=========================================================== */
+
+let AUDIT = null;
+
+
+/* ============================================================
+   SHOW FIELD DETAIL
+=========================================================== */
+
+async function showFieldDetail(
+    row
+) {
+
+    let html = "";
+
+
+    const fieldStatus =
+        (
+            AUDIT &&
+            AUDIT.fields &&
+            AUDIT.fields[row.field_id]
+        ) || null;
+
+
+    const ambiguous =
+        fieldStatus &&
+        fieldStatus.ambiguous;
+
+
+    const statuses =
+        (
+            fieldStatus &&
+            fieldStatus.statuses
+        ) || [];
+
+
+    html += `
+        <div class="detail">
+            <div class="label">Field ID</div>
+            <div><strong>${escapeHtml(row.field_id)}</strong></div>
+        </div>
+    `;
+
+
+    html += `
+        <div class="detail">
+            <div class="label">Field name</div>
+            <div>${escapeHtml(row.field_name)}</div>
+        </div>
+    `;
+
+
+    if (
+        ambiguous
+    ) {
+
+        html += `
+            <div class="detail" style="background:#fff7ed;border-radius:8px;padding:10px;border:1px solid #fdba74;">
+                <div class="label" style="color:#9a3412;">⚠ AMBIGUOUS OCR</div>
+                <div style="color:#9a3412;font-weight:700;">This field's OCR is ambiguous. Review the raw evidence below.</div>
+            </div>
+        `;
+
+    }
+
+
+    if (
+        statuses.length
+    ) {
+
+        html += `
+            <div class="detail">
+                <div class="label">Audit status</div>
+                <div>${statuses.map(escapeHtml).join(", ")}</div>
+            </div>
+        `;
+
+    }
+
+
+    html += `
+        <div class="detail">
+            <div class="label">Unit</div>
+            <div>${escapeHtml(row.unit || "—")}</div>
+        </div>
+    `;
+
+
+    html += `
+        <div class="detail">
+            <div class="label">Region</div>
+            <div>${escapeHtml(row.region || "—")}</div>
+        </div>
+    `;
+
+
+    html += `
+        <div class="detail">
+            <div class="label">Page</div>
+            <div>${escapeHtml(row.page ?? "—")}</div>
+        </div>
+    `;
+
+
+    html += `
+        <div class="detail">
+            <div class="label">Source row</div>
+            <div>${escapeHtml(row.row_text || "—")}</div>
+        </div>
+    `;
+
+
+    const schema =
+        schemaColumnsForRow(
+            row
+        );
+
+
+    html += `
+        <div class="detail">
+            <div class="label">Semantic columns</div>
+            <div>${schema.length ? schema.map(escapeHtml).join(", ") : "—"}</div>
+        </div>
+    `;
+
+
+    /*
+     * All values.
+     */
+
+    const flat = [];
+
+
+    for (
+        const [
+            column,
+            rawCells
+        ]
+        of Object.entries(
+            row.cells || {}
+        )
+    ) {
+
+        const cells =
+            Array.isArray(rawCells)
+                ? rawCells
+                : [rawCells];
+
+
+        for (
+            const cell
+            of cells
+        ) {
+
+            flat.push({
+                column,
+                cell
+            });
+
+        }
+
+    }
+
+
+    for (
+        const {
+            column,
+            cell
+        }
+        of flat
+    ) {
+
+        html += `
+            <div class="detail">
+                <div class="label">${escapeHtml(column)} — value</div>
+                <div class="detail-main">${escapeHtml(displayValue(cell))}${cell.unit ? " " + escapeHtml(cell.unit) : ""}</div>
+            </div>
+        `;
+
+
+        html += `
+            <div class="detail">
+                <div class="label">Confidence</div>
+                <div>${(Number(cell.confidence || 0) * 100).toFixed(1)}%</div>
+            </div>
+        `;
+
+
+        html += `
+            <div class="detail">
+                <div class="label">OCR raw text</div>
+                <div style="font-family:monospace;white-space:pre-wrap;word-break:break-all;">${escapeHtml(cell.raw_text || "")}</div>
+            </div>
+        `;
+
+
+        if (
+            Array.isArray(
+                cell.flags
+            ) &&
+            cell.flags.length
+        ) {
+
+            html += `
+                <div class="detail">
+                    <div class="label">Flags</div>
+                    <div>${cell.flags.map(escapeHtml).join("<br>")}</div>
+                </div>
+            `;
+
+        }
+
+    }
+
+
+    $("panelbody")
+        .innerHTML =
+        html;
+
+
+    $("panel")
+        .classList
+        .remove(
+            "hidden"
+        );
+
+}
+
+
+/* ============================================================
+   SHOW AUDIT
+=========================================================== */
+
+function showAudit(
+    jobId,
+    filename
+) {
+
+    $("auditTitle")
+        .textContent =
+        filename ||
+        jobId;
+
+
+    $("auditbody")
+        .innerHTML =
+        '<div class="detail">Loading audit...</div>';
+
+
+    fetch(
+        "/api/report/" +
+        encodeURIComponent(
+            jobId
+        ) +
+        "/audit"
+    )
+        .then(
+            function(response) {
+
+                return response.json();
+
+            }
+        )
+        .then(
+            function(result) {
+
+                if (
+                    !result.ok
+                ) {
+
+                    throw new Error(
+                        result.error ||
+                        "No audit."
+                    );
+
+                }
+
+
+                const c =
+                    result.counts ||
+                    {};
+
+
+                const rows = [
+                    ["Registered fields", c.registered_source_fields ?? "—"],
+                    ["Source fields", "125"],
+                    ["Unregistered fields", c.unregistered_source_fields ?? "—"],
+                    ["Missing values", c.fields_missing ?? "—"],
+                    ["OCR ambiguous", c.ocr_ambiguous ?? "—"],
+                    ["Column mismatches", c.column_mismatch ?? "—"],
+                    ["Text values", c.text_values ?? "—"],
+                    ["Errors / malformed", c.errors ?? "—"],
+                    ["Count invariant", c.field_count_invariant ? "YES" : "NO"]
+                ];
+
+
+                $("auditbody")
+                    .innerHTML =
+
+                    rows.map(
+                        function(
+                            r
+                        ) {
+
+                            return `
+                                <div class="detail">
+                                    <div class="label">${escapeHtml(r[0])}</div>
+                                    <div class="detail-main" style="font-size:22px;">${escapeHtml(r[1])}</div>
+                                </div>
+                            `;
+
+                        }
+                    )
+                    .join("") +
+
+                    '<div class="detail" style="font-size:11px;color:#94a3b8;">Audit is informational and never modifies extracted data.</div>';
+
+                $("auditPanel")
+                    .classList
+                    .remove(
+                        "hidden"
+                    );
+
+            }
+        )
+        .catch(
+            function(error) {
+
+                $("auditbody")
+                    .innerHTML =
+                    '<div class="error">' +
+                    escapeHtml(
+                        error.message
+                    ) +
+                    "</div>";
+
+            }
+        );
+
+}
+
+
+/* ============================================================
+   SHOW VALIDATION
+=========================================================== */
+
+function showValidation(
+    jobId,
+    filename
+) {
+
+    $("validationTitle")
+        .textContent =
+        filename ||
+        jobId;
+
+
+    $("validationBody")
+        .innerHTML =
+        '<div class="detail">Loading validation results...</div>';
+
+
+    fetch(
+        "/api/report/" +
+        encodeURIComponent(
+            jobId
+        ) +
+        "/validation"
+    )
+        .then(
+            function(response) {
+                return response.json();
+            }
+        )
+        .then(
+            function(result) {
+
+                if (
+                    !result.ok
+                ) {
+
+                    throw new Error(
+                        result.error ||
+                        "No validation data."
+                    );
+
+                }
+
+                const v =
+                    result.validation ||
+                    {};
+
+                const counts =
+                    v.discrepancy_counts ||
+                    {};
+
+                let html = '';
+
+                html += `
+                    <div class="detail">
+                        <div class="label">Source cells</div>
+                        <div class="detail-main" style="font-size:22px;">${v.source_physical_cells ?? "—"}</div>
+                    </div>
+                `;
+
+                html += `
+                    <div class="detail">
+                        <div class="label">Matched cells</div>
+                        <div class="detail-main" style="font-size:22px;">${v.html_cells_matched ?? "—"}</div>
+                    </div>
+                `;
+
+                html += `
+                    <div class="detail">
+                        <div class="label">Total discrepancies</div>
+                        <div class="detail-main" style="font-size:22px;color:${(v.discrepancy_count || 0) > 0 ? '#ef4444' : '#22c55e'};">${v.discrepancy_count ?? "—"}</div>
+                    </div>
+                `;
+
+                if (Object.keys(counts).length > 0) {
+                    html += '<div style="margin-top:8px;">';
+                    for (const [cat, cnt] of Object.entries(counts)) {
+                        const color = cat === 'WRONG_VALUE' ? '#ef4444' : cat === 'MISSING_VALUE' ? '#f59e0b' : '#6b7280';
+                        html += `
+                            <div class="detail">
+                                <div class="label">${escapeHtml(cat)}</div>
+                                <div class="detail-main" style="font-size:18px;color:${color};">${cnt}</div>
+                            </div>
+                        `;
+                    }
+                    html += '</div>';
+                }
+
+                const discrepancies = v.discrepancies || [];
+                if (discrepancies.length > 0) {
+                    html += '<div style="margin-top:12px;font-weight:600;">Discrepancies (first 50)</div>';
+                    html += '<table style="width:100%;border-collapse:collapse;font-size:11px;margin-top:4px;">';
+                    html += '<tr style="background:#f1f5f9;"><th style="text-align:left;padding:4px;border:1px solid #e2e8f0;">Category</th><th style="text-align:left;padding:4px;border:1px solid #e2e8f0;">Field</th><th style="text-align:left;padding:4px;border:1px solid #e2e8f0;">Source</th><th style="text-align:left;padding:4px;border:1px solid #e2e8f0;">Extracted</th><th style="text-align:left;padding:4px;border:1px solid #e2e8f0;">Column</th></tr>';
+                    const show = discrepancies.slice(0, 50);
+                    for (const d of show) {
+                        const bg = d.category === 'WRONG_VALUE' ? '#fef2f2' : d.category === 'MISSING_VALUE' ? '#fffbeb' : '#f9fafb';
+                        html += `<tr style="background:${bg};">`;
+                        html += `<td style="padding:4px;border:1px solid #e2e8f0;color:${d.category === 'WRONG_VALUE' ? '#ef4444' : '#f59e0b'};">${escapeHtml(d.category)}</td>`;
+                        html += `<td style="padding:4px;border:1px solid #e2e8f0;">${escapeHtml(d.field_name || d.field_id || "—")}</td>`;
+                        html += `<td style="padding:4px;border:1px solid #e2e8f0;">${escapeHtml(String(d.source_value ?? "—"))}</td>`;
+                        html += `<td style="padding:4px;border:1px solid #e2e8f0;">${escapeHtml(String(d.extraction_value ?? "—"))}</td>`;
+                        html += `<td style="padding:4px;border:1px solid #e2e8f0;">${escapeHtml(d.source_column || "—")} → ${escapeHtml(d.extraction_column || "—")}</td>`;
+                        html += '</tr>';
+                    }
+                    if (discrepancies.length > 50) {
+                        html += `<tr><td colspan="5" style="padding:4px;border:1px solid #e2e8f0;color:#6b7280;text-align:center;">... and ${discrepancies.length - 50} more</td></tr>`;
+                    }
+                    html += '</table>';
+                }
+
+                html += '<div class="detail" style="font-size:11px;color:#94a3b8;margin-top:8px;">Validation compares source PDF OCR against extracted data.</div>';
+
+                $("validationBody")
+                    .innerHTML = html;
+
+                $("validationPanel")
+                    .classList
+                    .remove(
+                        "hidden"
+                    );
+
+            }
+        )
+        .catch(
+            function(error) {
+
+                $("validationBody")
+                    .innerHTML =
+                    '<div class="error">' +
+                    escapeHtml(
+                        error.message
+                    ) +
+                    "</div>";
+
+            }
+        );
+
+}
+
+
+/* ============================================================
+   DETAILS PANEL
+============================================================ */
+
+function showPanel(
+    row,
+    column,
+    cells
+) {
+
+    let html = "";
+
+
+    html += `
+        <div class="detail">
+
+            <div class="label">
+                Field
+            </div>
+
+            <div>
+                ${escapeHtml(
+                    row.field_name
+                )}
+            </div>
+
+        </div>
+    `;
+
+
+    html += `
+        <div class="detail">
+
+            <div class="label">
+                Column
+            </div>
+
+            <div>
+                ${escapeHtml(
+                    column
+                )}
+            </div>
+
+        </div>
+    `;
+
+
+    for (
+        const cell
+        of cells
+    ) {
+
+        html += `
+            <div class="detail">
+
+                <div class="label">
+                    Value
+                </div>
+
+                <div class="detail-main">
+
+                    ${escapeHtml(
+                        displayValue(
+                            cell
+                        )
+                    )}
+
+                    ${
+                        cell.unit
+                            ? " " +
+                              escapeHtml(
+                                  cell.unit
+                              )
+                            : ""
+                    }
+
+                </div>
+
+            </div>
+        `;
+
+
+        html += `
+            <div class="detail">
+
+                <div class="label">
+                    Confidence
+                </div>
+
+                <div>
+                    ${
+                        (
+                            Number(
+                                cell.confidence ||
+                                0
+                            ) *
+                            100
+                        ).toFixed(1)
+                    }%
+                </div>
+
+            </div>
+        `;
+
+
+        html += `
+            <div class="detail">
+
+                <div class="label">
+                    Raw OCR
+                </div>
+
+                <div>
+                    ${escapeHtml(
+                        cell.raw_text ||
+                        ""
+                    )}
+                </div>
+
+            </div>
+        `;
+
+
+        html += `
+            <div class="detail">
+
+                <div class="label">
+                    Source row
+                </div>
+
+                <div>
+                    ${escapeHtml(
+                        cell.source_row ||
+                        row.row_text ||
+                        ""
+                    )}
+                </div>
+
+            </div>
+        `;
+
+
+        if (
+            Array.isArray(
+                cell.flags
+            )
+            &&
+            cell.flags.length
+        ) {
+
+            html += `
+                <div class="detail">
+
+                    <div class="label">
+                        Flags
+                    </div>
+
+                    <div>
+                        ${
+                            cell.flags
+                                .map(
+                                    escapeHtml
+                                )
+                                .join(
+                                    "<br>"
+                                )
+                        }
+                    </div>
+
+                </div>
+            `;
+
+        }
+
+    }
+
+
+    $("panelbody")
+        .innerHTML =
+        html;
+
+
+    $("panel")
+        .classList
+        .remove(
+            "hidden"
+        );
+
+}
+
+
+/* ============================================================
+   UPLOAD / ASYNC PARSER
+============================================================ */
+
+async function parseFile(
+    file
+) {
+
+    if (
+        !file ||
+        !file.name
+            .toLowerCase()
+            .endsWith(
+                ".pdf"
+            )
+    ) {
+
+        showError(
+            "Please choose a PDF file."
+        );
+
+        return;
+
+    }
+
+
+    $("error")
+        .classList
+        .add(
+            "hidden"
+        );
+
+
+    $("filename")
+        .textContent =
+        file.name;
+
+
+    setStatus(
+        "Processing",
+        "busy"
+    );
+
+
+    setProgress(
+        5,
+        "Uploading PDF..."
+    );
+
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "file",
+        file,
+        file.name
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/parse",
+                {
+                    method:
+                        "POST",
+
+                    body:
+                        formData
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            result.ok === false
+        ) {
+
+            throw new Error(
+                result.error ||
+                "Parser failed."
+            );
+
+        }
+
+
+        /*
+         * Synchronous response.
+         */
+
+        if (
+            result.data ||
+            result.report ||
+            result.rows ||
+            result.fields
+        ) {
+
+            setProgress(
+                90,
+                "Preparing table..."
+            );
+
+
+            DATA =
+                normalizeData(
+                    result.data ??
+                    result.report ??
+                    result
+                );
+
+
+            updateSummary(
+                result.summary ||
+                {}
+            );
+
+
+            $("reportTitle")
+                .textContent =
+                "Extracted measurements — " +
+                (
+                    result.filename ||
+                    file.name
+                );
+
+
+            buildFilters();
+
+            render();
+
+
+            $("summary")
+                .classList
+                .remove(
+                    "hidden"
+                );
+
+
+            $("results")
+                .classList
+                .remove(
+                    "hidden"
+                );
+
+
+            setProgress(
+                100,
+                "Complete"
+            );
+
+
+            setStatus(
+                "Ready",
+                "ok"
+            );
+
+
+            await loadReports();
+
+
+            if (
+                result.job_id
+            ) {
+
+                $("reportSelect")
+                    .value =
+                    result.job_id;
+
+            }
+
+
+            return;
+
+        }
+
+
+        /*
+         * Async response.
+         */
+
+        const jobId =
+            result.job_id ??
+            result.id ??
+            result.job;
+
+
+        if (!jobId) {
+
+            throw new Error(
+                "Parser accepted the PDF but returned no job ID."
+            );
+
+        }
+
+
+        setProgress(
+            15,
+            "Parser started..."
+        );
+
+
+        await pollJob(
+            jobId,
+            file.name
+        );
+
+
+        await loadReports();
+
+
+        $("reportSelect")
+            .value =
+            jobId;
+
+    }
+    catch(error) {
+
+        console.error(
+            error
+        );
+
+
+        $("progress")
+            .classList
+            .add(
+                "hidden"
+            );
+
+
+        setStatus(
+            "Error",
+            "bad"
+        );
+
+
+        showError(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   JOB POLLING
+============================================================ */
+
+async function pollJob(
+    jobId,
+    filename
+) {
+
+    for (
+        let attempt = 0;
+        attempt < 900;
+        attempt++
+    ) {
+
+        const response =
+            await fetch(
+                "/api/job/" +
+                encodeURIComponent(
+                    jobId
+                )
+            );
+
+
+        if (
+            response.status ===
+            404
+        ) {
+
+            await loadReport(
+                jobId
+            );
+
+            setProgress(
+                100,
+                "Complete"
+            );
+
+            return;
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        const job =
+            result.job ||
+            result;
+
+
+        const status =
+            String(
+                job.status ||
+                job.state ||
+                ""
+            )
+            .toLowerCase();
+
+
+        if (
+            status === "error"
+            ||
+            status === "failed"
+        ) {
+
+            throw new Error(
+                job.error ||
+                job.message ||
+                "Parser failed."
+            );
+
+        }
+
+
+        if (
+            status === "complete"
+            ||
+            status === "completed"
+            ||
+            status === "success"
+            ||
+            status === "finished"
+            ||
+            job.done === true
+        ) {
+
+            await loadReport(
+                jobId
+            );
+
+            setProgress(
+                100,
+                "Complete"
+            );
+
+            return;
+
+        }
+
+
+        let percent =
+            Number(
+                job.progress ??
+                20
+            );
+
+
+        if (
+            !Number.isFinite(
+                percent
+            )
+        ) {
+
+            percent = 20;
+
+        }
+
+
+        setProgress(
+            Math.max(
+                10,
+                Math.min(
+                    95,
+                    percent
+                )
+            ),
+            job.message ||
+            job.stage ||
+            "Running OCR and extraction..."
+        );
+
+
+        await new Promise(
+            function(resolve) {
+
+                setTimeout(
+                    resolve,
+                    1000
+                );
+
+            }
+        );
+
+    }
+
+
+    throw new Error(
+        "Parser timed out."
+    );
+
+}
+
+
+/* ============================================================
+   EVENT HANDLERS
+============================================================ */
+
+$("file")
+    .addEventListener(
+        "change",
+        function() {
+
+            const file =
+                $("file")
+                    .files[0];
+
+
+            if (file) {
+
+                parseFile(
+                    file
+                );
+
+            }
+
+        }
+    );
+
+
+$("drop")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target.tagName ===
+                "INPUT"
+            ) {
+
+                return;
+
+            }
+
+
+            $("file").click();
+
+        }
+    );
+
+
+$("drop")
+    .addEventListener(
+        "dragover",
+        function(event) {
+
+            event.preventDefault();
+
+
+            $("drop")
+                .classList
+                .add(
+                    "over"
+                );
+
+        }
+    );
+
+
+$("drop")
+    .addEventListener(
+        "dragleave",
+        function() {
+
+            $("drop")
+                .classList
+                .remove(
+                    "over"
+                );
+
+        }
+    );
+
+
+$("drop")
+    .addEventListener(
+        "drop",
+        function(event) {
+
+            event.preventDefault();
+
+
+            $("drop")
+                .classList
+                .remove(
+                    "over"
+                );
+
+
+            const files =
+                event.dataTransfer
+                    .files;
+
+
+            if (
+                files &&
+                files.length
+            ) {
+
+                parseFile(
+                    files[0]
+                );
+
+            }
+
+        }
+    );
+
+
+$("reportSelect")
+    .addEventListener(
+        "change",
+        async function() {
+
+            if (!this.value) {
+
+                return;
+
+            }
+
+
+            try {
+
+                await loadReport(
+                    this.value
+                );
+
+            }
+            catch(error) {
+
+                showError(
+                    error.message
+                );
+
+            }
+
+        }
+    );
+
+
+$("search")
+    .addEventListener(
+        "input",
+        function() {
+
+            const box =
+                this.closest(
+                    ".search-box"
+                );
+
+
+            if (
+                this.value.trim()
+            ) {
+
+                box.classList.add(
+                    "has-value"
+                );
+
+            }
+            else {
+
+                box.classList.remove(
+                    "has-value"
+                );
+
+            }
+
+
+            render();
+
+        }
+    );
+
+
+$("clearSearch")
+    .addEventListener(
+        "click",
+        function() {
+
+            $("search").value =
+                "";
+
+
+            $("search")
+                .closest(
+                    ".search-box"
+                )
+                .classList
+                .remove(
+                    "has-value"
+                );
+
+
+            render();
+
+
+            $("search")
+                .focus();
+
+        }
+    );
+
+
+document
+    .querySelectorAll(
+        ".search-example"
+    )
+    .forEach(
+        function(button) {
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    $("search").value =
+                        button.dataset.search;
+
+
+                    $("search")
+                        .closest(
+                            ".search-box"
+                        )
+                        .classList
+                        .add(
+                            "has-value"
+                        );
+
+
+                    render();
+
+
+                    $("search")
+                        .focus();
+
+                }
+            );
+
+        }
+    );
+
+
+$("region")
+    .addEventListener(
+        "change",
+        render
+    );
+
+
+$("page")
+    .addEventListener(
+        "change",
+        render
+    );
+
+
+$("field")
+    .addEventListener(
+        "change",
+        render
+    );
+
+
+$("closePanel")
+    .addEventListener(
+        "click",
+        function() {
+
+            $("panel")
+                .classList
+                .add(
+                    "hidden"
+                );
+
+        }
+    );
+
+
+$("closeAudit")
+    .addEventListener(
+        "click",
+        function() {
+
+            $("auditPanel")
+                .classList
+                .add(
+                    "hidden"
+                );
+
+        }
+    );
+
+
+$("closeValidation")
+    .addEventListener(
+        "click",
+        function() {
+
+            $("validationPanel")
+                .classList
+                .add(
+                    "hidden"
+                );
+
+        }
+    );
+
+
+/* ============================================================
+   DOWNLOAD PDF
+=========================================================== */
+
+$("downloadPdf")
+    .addEventListener(
+        "click",
+        async function() {
+            const jobId = $("reportSelect").value;
+            if (!jobId) {
+                return;
+            }
+
+            const btn = $("downloadPdf");
+            btn.disabled = true;
+            btn.textContent = "Generating...";
+
+            try {
+                const response = await fetch("/api/report/" + encodeURIComponent(jobId) + "/pdf");
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error || "Failed to generate PDF");
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = response.headers.get("content-disposition")?.split("filename=")[1]?.replace(/"/g, "") || "extracted_measurements.pdf";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+            catch (error) {
+                console.error(error);
+                alert("Failed to download PDF: " + error.message);
+            }
+            finally {
+                btn.disabled = false;
+                btn.textContent = "Download PDF";
+            }
+        }
+    );
+
+
+/* ============================================================
+   START
+=========================================================== */
+
+(async function() {
+
+    try {
+
+        await loadReports();
+
+        await renderDashboard();
+
+    }
+    catch(error) {
+
+        console.error(
+            error
+        );
+
+        showError(
+            error.message
+        );
+
+    }
+
+})();
+
+</script>
+
+</body>
+</html>che

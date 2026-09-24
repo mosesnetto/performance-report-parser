@@ -1,0 +1,153 @@
+fields:
+  # PAGE 13 - GENERAL
+  - {id: G001, page: 13, region: general, name: "Date and time of recording", aliases: ["Date and time of recording"], unit: ""}
+  - {id: G002, page: 13, region: general, name: "ENGINE state", aliases: ["ENGINE state"], unit: "", allow_text_values: true}
+  - {id: G003, page: 13, region: general, name: "ENGINE running hours", aliases: ["ENGINE running hours"], unit: "h"}
+  - {id: G004, page: 13, region: general, name: "Ambient humidity", aliases: ["Ambient humidity"], unit: "%", strip_ocr_trailing: True}
+  - {id: G005, page: 13, region: general, name: "Sea water temp.", aliases: ["Sea water temp"], unit: "°C", strip_ocr_trailing: true}
+  - {id: G006, page: 13, region: general, name: "Ambient air temp.", aliases: ["Ambient air temp"], unit: "°C", strip_ocr_trailing: True}
+  - {id: G007, page: 13, region: general, name: "Engine room air temp.", aliases: ["Engine room air temp"], unit: "°C", strip_ocr_trailing: True}
+  - {id: G008, page: 13, region: general, name: "Barom. pr. | Eng. room", aliases: ["Barom. pr.", "Barom. pr. Eng. room"], unit: "barA"}
+  - {id: G009, page: 13, region: general, name: "SHIP SOG | STW", aliases: ["SHIP SOG", "STW"], unit: "kn"}
+  - {id: G010, page: 13, region: general, name: "Draft fwd | aft", aliases: ["Draft fwd", "Draft aft"], unit: "m"}
+  - {id: G011, page: 13, region: general, name: "Draft mid | Trim", aliases: ["Draft mid", "Trim"], unit: "m"}
+  - {id: G012, page: 13, region: general, name: "Voy. / title", aliases: ["Voy. title", "Voy / title", "Voy. /title"], unit: "", allow_text_values: true}
+  - {id: G013, page: 13, region: general, name: "Record by", aliases: ["Record by"], unit: "", allow_text_values: true}
+  - {id: G014, page: 13, region: general, name: "Ackn. by", aliases: ["Ackn. by"], unit: "", allow_text_values: true}
+  - {id: G015, page: 13, region: general, name: "Remarks", aliases: ["Remarks"], unit: "", allow_text_values: true}
+
+  # PAGE 13 - POWER / SPEED
+  - {id: P001, page: 13, region: power_speed, name: "ENGINE power estimated", aliases: ["ENGINE power estimated"], unit: "kW", value_row_offsets: [-1]}
+  - {id: P002, page: 13, region: power_speed, name: "ENGINE speed", aliases: ["ENGINE speed"], unit: "rpm"}
+  - {id: P003, page: 13, region: power_speed, name: "ENGINE power effective", aliases: ["ENGINE power effective"], unit: "kW"}
+
+  # PAGE 13 - ELECTRONIC CONTROL
+  - {id: E001, page: 13, region: electronic_control, name: "Running mode", aliases: ["Running mode"], unit: "", allow_text_values: true}
+  - {id: E002, page: 13, region: electronic_control, name: "Governor mode", aliases: ["Governor mode"], unit: "", allow_text_values: true}
+  - {id: E003, page: 13, region: electronic_control, name: "Fuel index ECU", aliases: ["Fuel index ECU"], unit: "%"}
+  - {id: E004, page: 13, region: electronic_control, name: "Applied fuel quality offset", aliases: ["Applied fuel quality offset"], unit: "%"}
+
+  # PAGE 13 - CYLINDER PRESSURE
+  - {id: C001, page: 13, region: cylinder_pressure, name: "Firing press. pmax", aliases: ["Firing press. pmax", "Firing press pmax"], unit: "barG"}
+  - {id: C002, page: 13, region: cylinder_pressure, name: "pmax deviation", aliases: ["pmax deviation"], unit: "bar"}
+  - {id: C003, page: 13, region: cylinder_pressure, name: "pmax offset", aliases: ["pmax offset"], unit: "bar"}
+  - {id: C004, page: 13, region: cylinder_pressure, name: "Compression press.", aliases: ["Compression press"], unit: "barG"}
+  - {id: C005, page: 13, region: cylinder_pressure, name: "pcomp deviation", aliases: ["pcomp deviation"], unit: "bar"}
+  - {id: C006, page: 13, region: cylinder_pressure, name: "pcomp / pscav offset", aliases: ["pcomp / pscav offset"], unit: "-"}
+  - {id: C007, page: 13, region: cylinder_pressure, name: "Mean indicated press.", aliases: ["Mean indicated press"], unit: "barG"}
+  - {id: C008, page: 13, region: cylinder_pressure, name: "MIP deviation", aliases: ["MIP deviation"], unit: "bar"}
+  - {id: C009, page: 13, region: cylinder_pressure, name: "Fuel offset high", aliases: ["Fuel offset high"], unit: "%"}
+  - {id: C010, page: 13, region: cylinder_pressure, name: "Fuel offset low", aliases: ["Fuel offset low"], unit: "%"}
+  - {id: C011, page: 13, region: cylinder_pressure, name: "Power indicated", aliases: ["Power indicated"], unit: "kW"}
+  - {id: C012, page: 13, region: cylinder_pressure, name: "Mean effective press. (MEP)", aliases: ["Mean effective press. (MEP)", "Mean effective press"], unit: "bar"}
+  - {id: C013, page: 13, region: cylinder_pressure, name: "pmax-pcomp | pcomp / pscav", aliases: ["pmax-pcomp", "pcomp / pscav"], unit: "-"}
+
+  # PAGE 13 - TURBOCHARGER
+  - {id: T001, page: 13, region: turbocharger, name: "NV (tot-tot)", aliases: ["NV (tot-tot)", "NV"], unit: ""}
+  - {id: T002, page: 13, region: turbocharger, name: "TC speed", aliases: ["TC speed"], unit: "rpm"}
+  - {id: T003, page: 13, region: turbocharger, name: "TC speed 298", aliases: ["TC speed 298"], unit: "rpm"}
+  - {id: T004, page: 13, region: turbocharger, name: "Turbocharger efficiency", aliases: ["Turbocharger efficiency"], unit: "%"}
+  - {id: T005, page: 13, region: turbocharger, name: "Surge margin", aliases: ["Surge margin"], unit: "%"}
+  - {id: T006, page: 13, region: turbocharger, name: "Air mass flow", aliases: ["Air mass flow"], unit: "kg/s"}
+  - {id: T007, page: 13, region: turbocharger, name: "Break spec.air cons.", aliases: ["Break spec.air cons.", "Break spec air cons"], unit: "kg/kWh"}
+  - {id: T008, page: 13, region: turbocharger, name: "Exhaust gas mass flow", aliases: ["Exhaust gas mass flow"], unit: "kg/s"}
+
+  # PAGE 13 - SCAVENGE AIR
+  - {id: S001, page: 13, region: scavenge_air, name: "AUX. BLOWER operation", aliases: ["AUX. BLOWER operation"], unit: "", allow_text_values: true}
+  - {id: S002, page: 13, region: scavenge_air, name: "Suction press.", aliases: ["Suction press"], unit: "mmWG"}
+  - {id: S003, page: 13, region: scavenge_air, name: "Press. drop accr. SAC", aliases: ["Press. drop accr. SAC"], unit: "mmWG"}
+  - {id: S004, page: 13, region: scavenge_air, name: "Scav. air press. RECEIVER", aliases: ["Scav. air press. RECEIVER"], unit: "barG"}
+  - {id: S005, page: 13, region: scavenge_air, name: "Scav.air press.setp. MOP", aliases: ["Scav.air press.setp. MOP"], unit: "barG"}
+  - {id: S006, page: 13, region: scavenge_air, name: "Air temp. COMPR. in", aliases: ["Air temp. COMPR. in"], unit: "°C"}
+  - {id: S007, page: 13, region: scavenge_air, name: "Press. COMPR. outlet", aliases: ["Press. COMPR. outlet"], unit: "barG"}
+  - {id: S008, page: 13, region: scavenge_air, name: "Scav. air temp. COMPR. out", aliases: ["Scav. air temp. COMPR. out"], unit: "°C"}
+  - {id: S009, page: 13, region: scavenge_air, name: "Scav. air temp. SAC out", aliases: ["Scav. air temp. SAC out"], unit: "°C"}
+  - {id: S010, page: 13, region: scavenge_air, name: "Scav. air temp. RECEIVER", aliases: ["Scav. air temp. RECEIVER"], unit: "°C"}
+  - {id: S011, page: 13, region: scavenge_air, name: "Cool. water temp. SAC in", aliases: ["Cool. water temp. SAC in"], unit: "°C"}
+  - {id: S012, page: 13, region: scavenge_air, name: "Cool. water temp. SAC out", aliases: ["Cool. water temp. SAC out"], unit: "°C"}
+
+  # PAGE 13 - EXHAUST GAS
+  - {id: X001, page: 13, region: exhaust_gas, name: "Exh. gas temp. CYL out", aliases: ["Exh. gas temp. CYL out"], unit: "°C"}
+  - {id: X002, page: 13, region: exhaust_gas, name: "temp. deviation", aliases: ["temp. deviation"], unit: "°C"}
+  - {id: X003, page: 13, region: exhaust_gas, name: "Exh. vlv. open offset", aliases: ["Exh. vlv. open offset", "Exh. viv. open offset"], unit: "°CA"}
+  - {id: X004, page: 13, region: exhaust_gas, name: "Exh. gas press. MANIFOLD", aliases: ["Exh. gas press. MANIFOLD"], unit: "barG"}
+  - {id: X005, page: 13, region: exhaust_gas, name: "Exh. gas press. TC in", aliases: ["Exh. gas press. TC in"], unit: "barG"}
+  - {id: X006, page: 13, region: exhaust_gas, name: "Exh. gas press. TC out", aliases: ["Exh. gas press. TC out"], unit: "mmWG"}
+  - {id: X007, page: 13, region: exhaust_gas, name: "Exh. gas temp. TC in", aliases: ["Exh. gas temp. TC in"], unit: "°C"}
+  - {id: X008, page: 13, region: exhaust_gas, name: "Exh. gas temp. TC out", aliases: ["Exh. gas temp. TC out"], unit: "°C"}
+  - {id: X009, page: 13, region: exhaust_gas, name: "Exh.wastegate (EGB) pos.", aliases: ["Exh.wastegate (EGB) pos.", "Exh.wastegate"], unit: "%"}
+
+  # PAGE 14 - FUEL OIL
+  - {id: F001, page: 14, region: fuel_oil, name: "Absolute consumption", aliases: ["Absolute consumption"], unit: "m³/h"}
+  - {id: F002, page: 14, region: fuel_oil, name: "Specific FOC", aliases: ["Specific FOC"], unit: "g/kWh"}
+  - {id: F003, page: 14, region: fuel_oil, name: "Light running correction", aliases: ["Light running correction"], unit: "g/kWh"}
+  - {id: F004, page: 14, region: fuel_oil, name: "Thrust bearing loss", aliases: ["Thrust bearing loss"], unit: "g/kWh"}
+  - {id: F005, page: 14, region: fuel_oil, name: "Specific FOC shoptest", aliases: ["Specific FOC shoptest", "Specific FOC shortest"], unit: "g/kWh"}
+  - {id: F006, page: 14, region: fuel_oil, name: "Viscosity", aliases: ["Viscosity"], unit: "cSt", strip_ocr_trailing: true}
+  - {id: F007, page: 14, region: fuel_oil, name: "Sulfur content", aliases: ["Sulfur content","Sulphur content"], unit: "%"}
+  - {id: F008, page: 14, region: fuel_oil, name: "Water content", aliases: ["Water content"], unit: "%"}
+  - {id: F009, page: 14, region: fuel_oil, name: "LCV", aliases: ["LCV"], unit: "kJ/kg"}
+  - {id: F010, page: 14, region: fuel_oil, name: "Density", aliases: ["Density"], unit: "kg/m³"}
+  - {id: F011, page: 14, region: fuel_oil, name: "Source of analysis", aliases: ["Source of analysis"], unit: "", allow_text_values: true}
+  - {id: F012, page: 14, region: fuel_oil, name: "Viscosity ENGINE in", aliases: ["Viscosity ENGINE in"], unit: "cSt"}
+  - {id: F013, page: 14, region: fuel_oil, name: "Temp. ENGINE in", aliases: ["Temp. ENGINE in"], unit: "°C"}
+  - {id: F014, page: 14, region: fuel_oil, name: "Temp. FLOWMETER", aliases: ["Temp. FLOWMETER"], unit: "°C"}
+  - {id: F015, page: 14, region: fuel_oil, name: "Density FLOWM.", aliases: ["Density FLOWM."], unit: "kg/m³"}
+  - {id: F016, page: 14, region: fuel_oil, name: "Price", aliases: ["Price"], unit: "USD/t"}
+
+  # PAGE 14 - CYLINDER LUBRICATION
+  - {id: L001, page: 14, region: cylinder_lubrication, name: "Absolute consumption", aliases: ["Absolute consumption"], unit: "l/h"}
+  - {id: L002, page: 14, region: cylinder_lubrication, name: "Spec. lub oil consumpt.", aliases: ["Spec. lub oil consumpt.", "Spec. lub oil consumpt"], unit: "g/kWh"}
+  - {id: L003, page: 14, region: cylinder_lubrication, name: "Target feed rate@MCR", aliases: ["Target feed rate@MCR", "Target feed tate@MCR"], unit: "g/kWh"}
+  - {id: L004, page: 14, region: cylinder_lubrication, name: "Target f.r.@current load", aliases: ["Target f.r.@current load"], unit: "g/kWh"}
+  - {id: L005, page: 14, region: cylinder_lubrication, name: "BN", aliases: ["BN"], unit: ""}
+  - {id: L006, page: 14, region: cylinder_lubrication, name: "Density", aliases: ["Density"], unit: "kg/m³"}
+  - {id: L007, page: 14, region: cylinder_lubrication, name: "Density @ 40 °C", aliases: ["Density @ 40 °C", "kg/m3 @ 40°C"], unit: "kg/m³", anchor_after: "Spec. lub oil consumpt.", value_row_offsets: [1]}
+
+  # PAGE 14 - CYLINDER CONDITION
+  - {id: CC001, page: 14, region: cylinder_condition, name: "Cool. water temp. CYL in", aliases: ["Cool. water temp. CYL in"], unit: "°C"}
+  - {id: CC002, page: 14, region: cylinder_condition, name: "Cool. water temp. CYL out", aliases: ["Cool. water temp. CYL out"], unit: "°C"}
+  - {id: CC003, page: 14, region: cylinder_condition, name: "Cooling water press. CYL in", aliases: ["Cooling water press. CYL in"], unit: "bar"}
+  - {id: CC004, page: 14, region: cylinder_condition, name: "Coolant temp. PISTON in", aliases: ["Coolant temp. PISTON in"], unit: "°C"}
+  - {id: CC005, page: 14, region: cylinder_condition, name: "Coolant temp. PISTON out", aliases: ["Coolant temp. PISTON out"], unit: "°C"}
+  - {id: CC006, page: 14, region: cylinder_condition, name: "Scav. air temp. PIST. UNDERS.", aliases: ["Scav. air temp. PIST. UNDERS."], unit: "°C"}
+
+  # PAGE 14 - CRANKCASE / BEARINGS
+  - {id: B001, page: 14, region: crankcase, name: "MAIN BEARING temp.", aliases: ["MAIN BEARING temp."], unit: "°C"}
+  - {id: B002, page: 14, region: crankcase, name: "Temp. deviation", aliases: ["Temp. deviation"], unit: "°C", anchor_after: "MAIN BEARING temp."}
+  - {id: B003, page: 14, region: crankcase, name: "CRANK PIN BEAR. temp", aliases: ["CRANK PIN BEAR. temp"], unit: "°C"}
+  - {id: B004, page: 14, region: crankcase, name: "Temp. deviation CRANK PIN", aliases: ["Temp. deviation"], unit: "°C", anchor_after: "CRANK PIN BEAR. temp"}
+  - {id: B005, page: 14, region: crankcase, name: "X-HEAD BEAR. temp", aliases: ["X-HEAD BEAR. temp"], unit: "°C"}
+  - {id: B006, page: 14, region: crankcase, name: "Temp. deviation X-HEAD", aliases: ["Temp. deviation"], unit: "°C", anchor_after: "X-HEAD BEAR. temp"}
+
+  # PAGE 14 - LINER WALL
+  - {id: LW001, page: 14, region: liner_wall, name: "LINER WALL temp. aft", aliases: ["LINER WALL temp. aft","LINER WALL aft"], unit: "°C"}
+  - {id: LW002, page: 14, region: liner_wall, name: "LINER WALL temp. fp", aliases: ["LINER WALL temp. fp","LINER WALL fp"], unit: "°C"}
+  - {id: LW003, page: 14, region: liner_wall, name: "LINER WALL temp. fwd", aliases: ["LINER WALL temp. fwd","LINER WALL fwd"], unit: "°C"}
+  - {id: LW004, page: 14, region: liner_wall, name: "LINER WALL temp. exh", aliases: ["LINER WALL temp. exh","LINER WALL exh"], unit: "°C"}
+  - {id: LW005, page: 14, region: liner_wall, name: "LINER WALL temp. AVG", aliases: ["LINER WALL temp. AVG","LINER WALL AVG"], unit: "°C"}
+
+  # PAGE 14 - TC / SAC MEDIA
+  - {id: M001, page: 14, region: tc_sac_media, name: "Water press. SAC in", aliases: ["Water press. SAC in"], unit: "bar"}
+  - {id: M002, page: 14, region: tc_sac_media, name: "Lub oil temp. TC in", aliases: ["Lub oil temp. TC in"], unit: "°C"}
+  - {id: M003, page: 14, region: tc_sac_media, name: "Lub oil temp. TC out", aliases: ["Lub oil temp. TC out"], unit: "°C"}
+
+  # PAGE 14 - ENGINE MEDIA / PLANT
+  - {id: EM001, page: 14, region: engine_media_plant, name: "Lub oil temp ENGINE in", aliases: ["Lub oil temp ENGINE in"], unit: "°C"}
+  - {id: EM002, page: 14, region: engine_media_plant, name: "Lub oil temp. THRUST SEGM.", aliases: ["Lub oil temp. THRUST SEGM."], unit: "°C"}
+  - {id: EM003, page: 14, region: engine_media_plant, name: "Lub oil press. SYSTEM OIL", aliases: ["Lub oil press. SYSTEM OIL"], unit: "bar"}
+  - {id: EM004, page: 14, region: engine_media_plant, name: "Lub oil press. COOLING OIL", aliases: ["Lub oil press. COOLING OIL"], unit: "bar"}
+  - {id: EM005, page: 14, region: engine_media_plant, name: "Lub oil press. TURB. OIL", aliases: ["Lub oil press. TURB. OIL"], unit: "bar"}
+  - {id: EM006, page: 14, region: engine_media_plant, name: "Lub oil temp. TURB. OIL in", aliases: ["Lub oil temp. TURB. OIL in"], unit: "°C"}
+  - {id: EM007, page: 14, region: engine_media_plant, name: "Lub oil temp. TURB. OIL out", aliases: ["Lub oil temp. TURB. OIL out"], unit: "°C"}
+  - {id: EM008, page: 14, region: engine_media_plant, name: "Axial vibration", aliases: ["Axial vibration"], unit: "mm"}
+  - {id: EM009, page: 14, region: engine_media_plant, name: "Fuel oil press. ENGINE in", aliases: ["Fuel oil press. ENGINE in"], unit: "bar"}
+  - {id: EM010, page: 14, region: engine_media_plant, name: "Fuel oil press. ENGINE out", aliases: ["Fuel oil press. ENGINE out"], unit: "bar"}
+  - {id: EM011, page: 14, region: engine_media_plant, name: "Fuel oil press. FILTER in", aliases: ["Fuel oil press. FILTER in"], unit: "bar"}
+  - {id: EM012, page: 14, region: engine_media_plant, name: "Fuel oil press. FILTER out", aliases: ["Fuel oil press. FILTER out"], unit: "bar"}
+  - {id: EM013, page: 14, region: engine_media_plant, name: "Hydraulic oil press. FILTER in", aliases: ["Hydraulic oil press. FILTER in"], unit: "bar"}
+  - {id: EM014, page: 14, region: engine_media_plant, name: "Hydraulic oil press. FILTER out", aliases: ["Hydraulic oil press. FILTER out"], unit: "bar"}
+  - {id: EM015, page: 14, region: engine_media_plant, name: "Hydraulic oil press. MAIN", aliases: ["Hydraulic oil press. MAIN"], unit: "bar"}
+  - {id: EM016, page: 14, region: engine_media_plant, name: "Sealing air press.", aliases: ["Sealing air press."], unit: "bar"}
+  - {id: EM017, page: 14, region: engine_media_plant, name: "Hydr. oil PUMP swash plate pos.", aliases: ["Hydr. oil PUMP swash plate pos."], unit: "%"}
+  - {id: EM018, page: 14, region: engine_media_plant, name: "Exh. gas differential press. ECONOMIZER", aliases: ["Exh. gas differential press. ECONOMIZER"], unit: "mmWG"}

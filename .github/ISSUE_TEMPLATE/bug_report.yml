@@ -1,0 +1,46 @@
+name: 🐛 Bug report
+description: Report a problem parsing, validating or visualising a performance report.
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting — include the PDF metadata and mode (crops/pdf) where possible.
+  - type: input
+    id: report
+    attributes:
+      label: Affected report PDF
+      description: Filename and quarter (e.g. 2025__04__CE__01 ...)
+      placeholder: e.g. 2025_04_CE_01_ME_PERFORMANCE_REPORT
+    validations:
+      required: true
+  - type: dropdown
+    id: engine
+    attributes:
+      label: Engine mode
+      options: [v3, v4, web-app]
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Expected vs actual behaviour
+      description: What the parser produced vs what it should have produced.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. python -m meridian.cli --mode pdf --pdf example/... --engine v4
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output / errors
+      render: shell

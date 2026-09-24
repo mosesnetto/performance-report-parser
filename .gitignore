@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Lint / test caches
+.pytest_cache/
+.ruff_cache/
+
+# MERIDIAN runtime artifacts
+output/
+uploads/
+web_output/
+validation_output/
+logs/
+voices/
+*.log
+
+# Local / generated examples
+example/crops/
+example/*_extracted/
+example/*_pages/
+
+# PDFs regenerated at runtime (keep committed cannonical samples)
+*.pdf_meta.json
+
+# Secrets — never commit
+.env
+.env.*
+*.env
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MERIDIAN — Analytics / Ask</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: Arial, Helvetica, sans-serif; background: #f4f7fb; color: #172033; margin: 0; padding: 28px; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+h1 { font-size: 24px; margin: 0; }
+.nav a { text-decoration: none; padding: 9px 13px; border: 1px solid #dbe3ec; border-radius: 8px; background: #fff; color: #1f2937; font-weight: 700; font-size: 13px; margin-left: 8px; }
+.nav a.primary { background: #2563eb; color: #fff; border-color: #2563eb; }
+.card { background: #fff; border: 1px solid #dbe3ec; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; resize: vertical; min-height: 100px; }
+.btn { display: inline-block; background: #2563eb; color: #fff; padding: 10px 18px; border-radius: 8px; border: 0; font-weight: 700; cursor: pointer; font-size: 13px; }
+.result { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px; margin-top: 14px; white-space: pre-wrap; font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Analytics / Ask</h1>
+  <div class="nav">
+    <a href="/">Reports</a>
+    <a href="/validator">Validator</a>
+    <a href="/analytics" class="primary">Analytics</a>
+    <a href="/graphs">Graphs</a>
+  </div>
+</header>
+<main>
+  <div class="card">
+    <h2>Ask a question about the reports</h2>
+    <p style="font-size:13px;color:#64748b;margin-top:0;">Example: "Which month had the highest Specific FOC?"</p>
+    <textarea id="question" placeholder="Type your analytical question here...">Which month had the highest Specific FOC?</textarea>
+    <button class="btn" onclick="ask()">Ask</button>
+    <div id="answer" class="result"></div>
+  </div>
+</main>
+<script>
+function ask() {
+  const q = document.getElementById('question').value;
+  document.getElementById('answer').textContent = 'Thinking...';
+  fetch('/analytics/query', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({question:q})})
+    .then(r=>r.json()).then(d=>{
+      document.getElementById('answer').textContent = d.result ? (d.result.answer || 'No answer returned.') : 'Error: ' + (d.error || 'Unknown');
+    }).catch(e=>{
+      document.getElementById('answer').textContent = 'Request failed: ' + e.message;
+    });
+}
+</script>
+</body>
+</html>
