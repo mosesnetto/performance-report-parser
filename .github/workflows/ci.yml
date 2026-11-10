@@ -40,6 +40,8 @@ jobs:
         run: python -c "import pkgutil, meridian; [__import__('meridian.'+m.name, fromlist=['*']) for m in pkgutil.iter_modules(meridian.__path__)]"
       - name: Run tests
         run: pytest
+        env:
+          PYTHONPATH: .
 
   smoke:
     name: App boot smoke test
@@ -60,4 +62,6 @@ jobs:
           resp = client.get("/")
           assert resp.status_code in (200, 302), resp.status_code
           print(f"OK: boot routes={len(routes)}")
+        env:
+          PYTHONPATH: .
           PY
